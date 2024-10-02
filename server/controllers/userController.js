@@ -263,4 +263,5 @@ module.exports = {
   deletUser,
   getUserByUid,
   googleAuth,
+  createAndSendToken,
 };

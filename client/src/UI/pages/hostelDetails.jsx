@@ -11,43 +11,13 @@ import { useGetListingDetailsQuery } from '../../Redux/api/hostelApis';
 import Loader from '../../Admin/common/Loader';
 import { IoBedSharp } from 'react-icons/io5';
 import '../style/style.css';
-import '../js/script.js';
-import Swiper from 'swiper';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+
 import FacilitiesSection from '../components/facilities.jsx';
+import FoodMenu from '../components/HostelsComponents/foodMenu.jsx';
+import CoummunityPage from '../components/HostelsComponents/coummunityPage.jsx';
+import HostelReviews from '../components/HostelsComponents/hostelReviews.jsx';
 
 const HostelDetails = () => {
-  useEffect(() => {
-    var swiper = new Swiper('.mySwiper', {
-      slidesPerView: 2,
-      spaceBetween: 32,
-      centeredSlides: false,
-      loop: true,
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-          centeredSlides: false,
-        },
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 28,
-          centeredSlides: false,
-        },
-        1024: {
-          slidesPerView: 2,
-          spaceBetween: 13,
-        },
-      },
-    });
-  }, []);
-
   const students = [
     {
       university: 'Harvard University',
@@ -64,8 +34,7 @@ const HostelDetails = () => {
     // Add more students as needed
   ];
   const { hostelId } = useParams();
-  mapboxgl.accessToken =
-    'pk.eyJ1Ijoic3VsZW1hbmt1bmRpNCIsImEiOiJjbHc3aGRrcG0xYmZvMm1yemE1aGE0ZjVjIn0.TT_W_UV0G3pGZ8VqtdUBBg';
+  mapboxgl.accessToken = `pk.eyJ1Ijoic3VsZW1hbmt1bmRpNCIsImEiOiJjbHc3aGRrcG0xYmZvMm1yemE1aGE0ZjVjIn0.TT_W_UV0G3pGZ8VqtdUBBg`;
 
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -239,88 +208,11 @@ const HostelDetails = () => {
                   </div>
 
                   <div className="mt-6">
-                    <h5 className="text-lg text-black font-semibold">
-                      Food Menu:
-                    </h5>
-
-                    <div className="mt-3 shadow-2xl overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200 shadow-lg rounded-lg bg-white">
-                        <thead className="bg-red-500 rounded-t-lg">
-                          <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider border-b border-blue-300">
-                              Day
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider border-b border-blue-300">
-                              Breakfast
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider border-b border-blue-300">
-                              Lunch
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider border-b border-blue-300">
-                              Dinner
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {hostelData?.FoodMenu?.map((item, index) => (
-                            <tr
-                              key={index}
-                              className="hover:bg-blue-100 transition duration-200 ease-in-out"
-                            >
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-extrabold text-gray-500">
-                                {item.Day}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {item.BreakFast}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {item.Lunch}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {item.Dinner}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <FoodMenu hostelData={hostelData} />
                   </div>
 
                   <div className="text-black container mx-auto p-6 shadow-2xl rounded-lg">
-                    <h1 className="text-2xl font-bold mb-6 text-center">
-                      Community Page
-                    </h1>
-                    <div className="overflow-hidden shadow-lg rounded-lg">
-                      <table className="min-w-full  bg-white border p-5 border-gray-200">
-                        <thead className="bg-red-500">
-                          <tr>
-                            <th className="py-3 px-6 text-left text-sm font-medium text-white uppercase tracking-wider">
-                              University
-                            </th>
-
-                            <th className="py-3 px-6 text-left text-sm font-medium text-white uppercase tracking-wider">
-                              Total No of students
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-transparent">
-                          {students.map((student, index) => (
-                            <tr
-                              key={index}
-                              className="hover:bg-blue-100 transition duration-300 ease-in-out transform hover:scale-105 shadow-md mb-2"
-                            >
-                              <td className="py-4 px-6 text-sm text-gray-500">
-                                {student.university}
-                              </td>
-
-                              <td className="py-4 px-6 text-sm text-gray-500">
-                                {student.NoOfStudents}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                    <CoummunityPage students={students} />
 
                     <section>
                       <FacilitiesSection facilities={hostelData?.Facilities} />
@@ -444,116 +336,7 @@ const HostelDetails = () => {
         </div>
       )}
 
-      <section className="py-24 ">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center gap-y-8 lg:gap-y-0 flex-wrap md:flex-wrap lg:flex-nowrap lg:flex-row lg:justify-between lg:gap-x-8 max-w-sm sm:max-w-2xl lg:max-w-full mx-auto">
-            <div className="w-full lg:w-2/5">
-              <span className="text-sm text-black font-medium mb-4 block">
-                Hostel Reviews
-              </span>
-              <h2 className="text-4xl font-bold text-black leading-[3.25rem] mb-8">
-                23k+ Customers gave their{' '}
-                <span className=" text-transparent bg-clip-text bg-gradient-to-tr from-red-400 to-red-500">
-                  Feedback
-                </span>
-              </h2>
-            </div>
-            <div className="w-full lg:w-3/5">
-              <div className="swiper mySwiper">
-                <div className="swiper-wrapper">
-                  <div className="swiper-slide group bg-white border border-solid border-gray-300 rounded-2xl max-sm:max-w-sm max-sm:mx-auto p-5 transition-all duration-500 hover:border-indigo-600">
-                    <div className="flex items-center gap-5 mb-3 sm:mb-7">
-                      <img
-                        className="rounded-full"
-                        src="https://pagedone.io/asset/uploads/1696229969.png"
-                        alt="avatar"
-                      />
-                      <div className="grid gap-1">
-                        <h5 className="text-black font-medium transition-all duration-500  ">
-                          Jane D
-                        </h5>
-                        <span className="text-sm leading-6 text-black">
-                          CEO{' '}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center mb-4 sm:mb-4 gap-2 text-amber-500 transition-all duration-500  ">
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                    </div>
-                    <p className="text-sm text-black font-medium leading-6 transition-all duration-500 min-h-18">
-                      The user interface of this pagedone is so intuitive, I was
-                      able to start using it without any guidance.
-                    </p>
-                  </div>
-                  <div className="swiper-slide group bg-white border border-solid border-gray-300 rounded-2xl max-sm:max-w-sm max-sm:mx-auto p-5 transition-all duration-500 hover:border-indigo-600">
-                    <div className="flex items-center gap-5 mb-3 sm:mb-7">
-                      <img
-                        className="rounded-full"
-                        src="https://pagedone.io/asset/uploads/1696229969.png"
-                        alt="avatar"
-                      />
-                      <div className="grid gap-1">
-                        <h5 className="text-black font-medium transition-all duration-500  ">
-                          Jane D
-                        </h5>
-                        <span className="text-sm leading-6 text-black">
-                          CEO{' '}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center mb-4 sm:mb-4 gap-2 text-amber-500 transition-all duration-500  ">
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                    </div>
-                    <p className="text-sm text-black font-medium leading-6 transition-all duration-500 min-h-18">
-                      The user interface of this pagedone is so intuitive, I was
-                      able to start using it without any guidance.
-                    </p>
-                  </div>
-                  <div className="swiper-slide group bg-white border border-solid border-gray-300 rounded-2xl max-sm:max-w-sm max-sm:mx-auto p-5 transition-all duration-500 hover:border-indigo-600">
-                    <div className="flex items-center gap-5 mb-3 sm:mb-7">
-                      <img
-                        className="rounded-full"
-                        src="https://pagedone.io/asset/uploads/1696229969.png"
-                        alt="avatar"
-                      />
-                      <div className="grid gap-1">
-                        <h5 className="text-black font-medium transition-all duration-500  ">
-                          Jane D
-                        </h5>
-                        <span className="text-sm leading-6 text-black">
-                          CEO{' '}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center mb-4 sm:mb-4 gap-2 text-amber-500 transition-all duration-500  ">
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                      <BsStarFill />
-                    </div>
-                    <p className="text-sm text-black font-medium leading-6 transition-all duration-500 min-h-18">
-                      The user interface of this pagedone is so intuitive, I was
-                      able to start using it without any guidance.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HostelReviews />
     </>
   );
 };

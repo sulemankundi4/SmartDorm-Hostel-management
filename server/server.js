@@ -9,6 +9,7 @@ const { errorMiddleware } = require("./middleware/error");
 const userRouter = require("./routes/user");
 const listingRouter = require("./routes/listing");
 const userTicketsRouter = require("./routes/tickets");
+const studentsRouter = require("./routes/student");
 const app = express();
 
 app.use(express.json());
@@ -31,6 +32,7 @@ const port = process.env.PORT || 5000;
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/listings", listingRouter);
 app.use("/api/v1/tickets", userTicketsRouter);
+app.use("/api/v1/students", studentsRouter);
 
 app.listen(port, () => {
   console.log(`Server is running at port ${port}`);
