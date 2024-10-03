@@ -18,7 +18,20 @@ export const studentApis = createApi({
         body,
       }),
     }),
+    studentLogIn: builder.mutation({
+      query: ({ body }) => ({
+        url: 'login',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          accept: 'application/json',
+        },
+        credentials: 'include',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useStudentSignupMutation } = studentApis;
+export const { useStudentSignupMutation, useStudentLogInMutation } =
+  studentApis;

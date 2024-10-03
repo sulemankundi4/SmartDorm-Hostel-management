@@ -7,6 +7,7 @@ import { FaBuilding } from 'react-icons/fa6';
 import logo from '../../assets/Images/logo.png';
 import Swal from 'sweetalert2';
 import { auth } from '../../utils/firebaseAuth';
+import profile from '../pages/Students/studentProfile';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -116,7 +117,7 @@ const Navbar = () => {
             </>
           )}
           <li>
-            <div className="flex items-center gap-4 md:gap-8">
+            <div className="flex items-center  md:gap-8">
               {user ? (
                 <div className="relative">
                   <img
@@ -126,13 +127,29 @@ const Navbar = () => {
                     onClick={toggleDropDown}
                   />
                   {dropdown && (
-                    <div className="absolute top-full left-0 bg-white p-2 shadow-md">
-                      <button
-                        className="block text-black no-underline"
-                        onClick={logoutHandler}
-                      >
-                        Logout
-                      </button>
+                    <div className="absolute top-full -right-10 mt-2 w-48 bg-white rounded-lg shadow-lg">
+                      <ul className="py-2">
+                        <Link
+                          to={'/student-profile'}
+                          className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white"
+                        >
+                          Profile
+                        </Link>
+                        <li className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white">
+                          Settings
+                        </li>
+                        <li className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white">
+                          Privacy
+                        </li>
+                        <li>
+                          <button
+                            className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white"
+                            onClick={logoutHandler}
+                          >
+                            Logout
+                          </button>
+                        </li>
+                      </ul>
                     </div>
                   )}
                 </div>
@@ -142,7 +159,6 @@ const Navbar = () => {
                     color="white"
                     className="ml-1 mr-3 absolute top-8"
                   />
-
                   <button
                     onClick={HostelOwnerAccount}
                     className="py-2 pl-6 pr-3 inline-block tracking-wide align-middle duration-500 text-base text-center bg-red-500 text-white rounded-md"

@@ -6,14 +6,14 @@ const sendEmail = require("../utils/email");
 const juice = require("juice");
 const { css, generateEmailTemplate } = require("../utils/confirmEmailTemplate");
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id, type) => {
+  return jwt.sign({ id, type }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
-const createAndSendToken = (user, statusCode, res, isEmailConfirming) => {
-  const token = signToken(user._id);
+const createAndSendToken = (user, statusCode, res, isEmailConfirming, type) => {
+  const token = signToken(user._id, type === "user" ? "user" : "student");
 
   const cookiesOption = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -21,6 +21,7 @@ const createAndSendToken = (user, statusCode, res, isEmailConfirming) => {
 
   res.cookie("jwt", token, cookiesOption);
   user.ConfirmPassword = undefined;
+
   if (!isEmailConfirming) {
     res.status(statusCode).json({
       status: "success",
@@ -63,7 +64,7 @@ const signUp = tryCatch(async (req, res, next) => {
       message,
     });
 
-    createAndSendToken(user, 200, res, false);
+    createAndSendToken(user, 200, res, false, "user");
 
     res.status(200).json({
       status: "success",
@@ -86,7 +87,7 @@ const login = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Incorrect email or password", 401));
   }
 
-  createAndSendToken(user, 200, res, false);
+  createAndSendToken(user, 200, res, false, "user");
 });
 
 const verifyEmail = tryCatch(async (req, res, next) => {
@@ -105,7 +106,7 @@ const verifyEmail = tryCatch(async (req, res, next) => {
   user.EmailVerificationTokenExpires = undefined;
 
   await user.save({ validateBeforeSave: false });
-  createAndSendToken(user, 200, res, true);
+  createAndSendToken(user, 200, res, true, "user");
   next();
 });
 
@@ -200,7 +201,7 @@ const googleAuth = tryCatch(async (req, res, next) => {
   const userAlreadyExists = await Users.findOne({ Email });
 
   if (userAlreadyExists) {
-    createAndSendToken(userAlreadyExists, 200, res, false);
+    createAndSendToken(userAlreadyExists, 200, res, false, "user");
     return res.status(200).json({
       status: "success",
       payLoad: {
@@ -223,7 +224,7 @@ const googleAuth = tryCatch(async (req, res, next) => {
   }
   user.IsEmailVerified = true;
   await user.save({ validateBeforeSave: false });
-  createAndSendToken(user, 200, res, false);
+  createAndSendToken(user, 200, res, false, "user");
 
   return res.status(200).json({
     status: "success",

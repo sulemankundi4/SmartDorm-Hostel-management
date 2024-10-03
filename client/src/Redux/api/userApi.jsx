@@ -55,10 +55,20 @@ export const userApi = createApi({
   }),
 });
 
-export const getLoggedInUser = async (id) => {
+export const getLoggedInUser = async (id, userType) => {
   try {
-    const { data } = await axios.get(`${server}/api/v1/users/${id}`);
-    return data.payLoad.user;
+    let res;
+
+    if (userType === 'user') {
+      const { data } = await axios.get(`${server}/api/v1/users/${id}`);
+      res = data;
+    } else {
+      const { data } = await axios.get(`${server}/api/v1/students/${id}`);
+      res = data;
+    }
+
+    console.log(res);
+    return res.payLoad.user;
   } catch (e) {
     throw new Error(e);
   }

@@ -4,11 +4,13 @@ import { useLogInMutation } from '../../Redux/api/userApi';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import useAuthenticate from '../../utils/googleAuth';
+import { useStudentLogInMutation } from '../../Redux/api/studentApis';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ Email: '', Password: '' });
-
+  const [isStudentLogin, setIsStudentLogin] = useState(false);
   const [loginApi] = useLogInMutation();
+  const [studentLogin] = useStudentLogInMutation();
   const navigate = useNavigate();
   const authenticate = useAuthenticate();
 
@@ -19,11 +21,18 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await loginApi({ body: formData });
+      let response;
+      if (isStudentLogin) {
+        const res = await studentLogin({ body: formData });
+        response = res;
+      } else {
+        const res = await loginApi({ body: formData });
+        response = res;
+      }
 
-      if (res.error) {
+      if (response.error) {
         setFormData({ Email: '', Password: '' });
-        return toast.error(res.error.data.message);
+        return toast.error(response.error.data.message);
       }
       Swal.fire({
         icon: 'success',
@@ -86,7 +95,7 @@ const SignIn = () => {
                 </div>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-2">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
                   Enter Password
                 </label>
@@ -122,6 +131,50 @@ const SignIn = () => {
                     </svg>
                   </span>
                 </div>
+              </div>
+
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="relative items-center">
+                  <input
+                    type="checkbox"
+                    name="isStudentLogin"
+                    id="isStudentLogin"
+                    checked={isStudentLogin}
+                    onChange={() => setIsStudentLogin(!isStudentLogin)}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="isStudentLogin"
+                    className={`flex items-center justify-center w-4 h-4 border-2 rounded-lg cursor-pointer transition-colors duration-200 ${
+                      isStudentLogin
+                        ? 'bg-red-500 border-red-500'
+                        : 'bg-transparent border-gray-300 dark:border-form-strokedark'
+                    }`}
+                  >
+                    {isStudentLogin && (
+                      <svg
+                        className="w-4 h-4 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                    )}
+                  </label>
+                </div>
+                <label
+                  htmlFor="isStudentLogin"
+                  className="font-medium text-black dark:text-white cursor-pointer"
+                >
+                  Login as Student
+                </label>
               </div>
 
               <div className="mb-5">

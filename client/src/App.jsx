@@ -30,6 +30,7 @@ import EditListing from './Admin/pages/Listings/ManageListings/editListings';
 import CheckOut from './UI/pages/checkOut';
 import AllTickets from './Admin/pages/Tickets/AllTickets';
 import TicketDetails from './Admin/pages/Tickets/TicketDetails';
+import StudentProfile from './UI/pages/Students/studentProfile';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -58,8 +59,8 @@ function App() {
             .find((item) => item.includes('jwt'))
             .split('=')[1],
         );
-
-        const data = await getLoggedInUser(tokenPayload.id);
+        console.log(tokenPayload);
+        const data = await getLoggedInUser(tokenPayload.id, tokenPayload.type);
         dispatch(userLoggedIn(data));
       } else {
         dispatch(userLoggedOut());
@@ -94,7 +95,6 @@ function App() {
             </>
           }
         />
-
         {/* ADMIN ROUTES */}
         <Route
           element={
@@ -109,7 +109,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/allListings" element={<AllListings />} />
         </Route>
-
         <Route
           element={
             <ProtectedRoute
@@ -121,7 +120,6 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
         </Route>
-
         <Route
           path="/verifyEmail"
           element={
@@ -146,6 +144,15 @@ function App() {
             <>
               <PageTitle title="Contact Us | SmartDorm" />
               <ContactUs />
+            </>
+          }
+        />{' '}
+        <Route
+          path="/student-profile"
+          element={
+            <>
+              <PageTitle title="Student Profile | SmartDorm" />
+              <StudentProfile />
             </>
           }
         />
@@ -195,7 +202,6 @@ function App() {
           <Route path="/all-tickets" element={<AllTickets />} />
           <Route path="/ticket-details/:ticketId" element={<TicketDetails />} />
         </Route>
-
         {/* BELOW ROUTES FOR THE Hostel owners*/}
         <Route
           element={
