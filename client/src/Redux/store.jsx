@@ -4,6 +4,7 @@ import { userApi } from './api/userApi';
 import { hostelsApis } from './api/hostelApis';
 import { ticketApis } from './api/ticketApis';
 import { studentApis } from './api/studentApis';
+import { paymentApis } from './api/paymentApis';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [hostelsApis.reducerPath]: hostelsApis.reducer,
     [ticketApis.reducerPath]: ticketApis.reducer,
     [studentApis.reducerPath]: studentApis.reducer,
+    [paymentApis.reducerPath]: paymentApis.reducer,
   },
   middleware: (mid) => [
     ...mid(),
@@ -19,5 +21,6 @@ export const store = configureStore({
     hostelsApis.middleware,
     ticketApis.middleware,
     studentApis.middleware,
+    paymentApis.middleware,
   ],
 });
