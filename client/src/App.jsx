@@ -31,6 +31,7 @@ import CheckOut from './UI/pages/checkOut';
 import AllTickets from './Admin/pages/Tickets/AllTickets';
 import TicketDetails from './Admin/pages/Tickets/TicketDetails';
 import StudentProfile from './UI/pages/Students/studentProfile';
+import VerifySingleRoomBookings from './Admin/pages/Bookings/VerifySingleRoomBookings';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -214,6 +215,10 @@ function App() {
           }
         >
           <Route path="/myListings" element={<MyListings />} />
+          <Route
+            path="/single/bookings"
+            element={<VerifySingleRoomBookings />}
+          />
           <Route
             path="/listingDetails/:listingId"
             element={<ListingDetails />}

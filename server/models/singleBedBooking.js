@@ -9,7 +9,7 @@ const singleBedBookingSchema = mongoose.Schema(
 
     HostelOwnerName: {
       type: mongoose.Schema.ObjectId,
-      ref: "User",
+      ref: "Users",
     },
 
     HostelName: {

@@ -15,6 +15,7 @@ const MyListings = () => {
   const { data, isLoading, error } = useOwnerListingQuery({ id: user._id });
 
   const listingData = data?.payLoad;
+
   if (error) {
     return toast.error('An error occurred while fetching your listings');
   }
@@ -111,67 +112,6 @@ const MyListings = () => {
               : null}
           </>
         )}
-
-        {/* I WILL USE THIS UI WHEN OWNER LIST HIS PROPERTY */}
-        {/* <div className="col-span-9">
-          <div className="page-header flex items-center space-x-4">
-            <img
-              src="https://a.hwstatic.com/raw/upload/f_auto,q_auto/wds/illustrations/md/hifive.svg"
-              width="60"
-              height="60"
-              title="High five image"
-              alt="High five image"
-              aria-label="High five image"
-            />
-            <h1 className="text-2xl font-bold">
-              Well done!
-              <br />
-              We will now review your signup details
-            </h1>
-          </div>
-          <div>
-            <p className="my-4">
-              Thank you for signing up for your property, we will review your
-              property details and send you an email to verify your account and
-              let you know what to expect next.
-            </p>
-            <h3 className="text-xl font-semibold mb-2">
-              In order to build your listing, please prepare:
-            </h3>
-            <ul className="list-disc pl-5 mb-4">
-              <li>Photos of your property (including photos for rooms)</li>
-              <li>
-                Information about your property including Property description,
-                directions, rooms and things to note
-              </li>
-              <li>Your property facilities and policies</li>
-              <li>Tax details if applicable</li>
-            </ul>
-            <h3 className="text-xl font-semibold mb-2">
-              Not sure what to do next?
-            </h3>
-            <p className="mb-4">
-              Our team will guide you through all the steps, and you can decide
-              when you want your property to go live.
-            </p>
-            <div className="flex">
-              <a
-                href="/en/listings"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-200"
-              >
-                <svg
-                  className="h-5 w-5 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                 SVG content
-                </svg>
-                My Listings
-              </a>
-            </div>
-          </div>
-        </div> */}
       </DefaultLayout>
     </div>
   );
