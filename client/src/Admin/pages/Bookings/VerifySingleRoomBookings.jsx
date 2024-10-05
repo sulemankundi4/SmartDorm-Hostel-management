@@ -13,6 +13,7 @@ const VerifySingleRoomBookings = () => {
   const { user } = useSelector((s) => s.userReducer);
   const { data, isLoading, isError } = useGetBookingsQuery({
     userId: user._id,
+    isStudent: false,
   });
 
   const bookingData = data?.bookings;

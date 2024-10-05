@@ -32,6 +32,7 @@ import AllTickets from './Admin/pages/Tickets/AllTickets';
 import TicketDetails from './Admin/pages/Tickets/TicketDetails';
 import StudentProfile from './UI/pages/Students/studentProfile';
 import VerifySingleRoomBookings from './Admin/pages/Bookings/VerifySingleRoomBookings';
+import StudentBookings from './UI/pages/Students/studentBookings';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -96,6 +97,38 @@ function App() {
             </>
           }
         />
+        {/* STUDENT ROUTES */}
+        <Route
+          element={
+            <ProtectedRoute
+              isAuthenticated={user?.University !== '' ? true : false}
+              isEmailVerified={user?.IsEmailVerified}
+            />
+          }
+        >
+          <Route
+            path="/student-profile"
+            element={
+              <>
+                <PageTitle title="Student Profile | SmartDorm" />
+                <StudentProfile />
+              </>
+            }
+          />
+
+          <Route
+            path="/student-bookings"
+            element={
+              <>
+                <PageTitle title="Student Bookings | SmartDorm" />
+                <StudentBookings />
+              </>
+            }
+          />
+
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/allListings" element={<AllListings />} />
+        </Route>
         {/* ADMIN ROUTES */}
         <Route
           element={
@@ -148,15 +181,6 @@ function App() {
             </>
           }
         />{' '}
-        <Route
-          path="/student-profile"
-          element={
-            <>
-              <PageTitle title="Student Profile | SmartDorm" />
-              <StudentProfile />
-            </>
-          }
-        />
         <Route
           path="/search"
           element={

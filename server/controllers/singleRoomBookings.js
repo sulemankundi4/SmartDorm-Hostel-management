@@ -2,14 +2,16 @@ const { tryCatch, errorHandler } = require("../utils/features");
 const SingleBedBooking = require("../models/singleBedBooking");
 
 const getSingleRoomBookingsOfOwner = tryCatch(async (req, res, next) => {
-  const { userId } = req.query;
+  const { userId, isStudent } = req.query;
 
   if (!userId) {
     return next(new errorHandler("Hostel Owner ID is required", 400));
   }
 
-  const bookings = await SingleBedBooking.find({ HostelOwnerName: userId }).populate("StudentName", "Name Email University").populate("HostelName", "HostelName HostelAddress").populate("HostelOwnerName", "Name Email");
-
+  const bookings = await SingleBedBooking.find(isStudent ? { StudentName: userId } : { HostelOwnerName: userId })
+    .populate("StudentName", "Name Email University")
+    .populate("HostelName", "HostelName HostelAddress")
+    .populate("HostelOwnerName", "Name Email");
   res.status(200).json({ success: true, bookings });
 });
 

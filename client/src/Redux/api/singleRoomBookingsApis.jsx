@@ -8,8 +8,8 @@ export const singleRoomBookingsApis = createApi({
   }),
   endpoints: (builder) => ({
     getBookings: builder.query({
-      query: ({ userId }) => ({
-        url: `get-all-bookings?userId=${userId}`,
+      query: ({ userId, isStudent }) => ({
+        url: `get-all-bookings?userId=${userId}&isStudent=${isStudent}`,
         method: 'GET',
       }),
     }),
