@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import Logo from '../../images/logo/logo.svg';
 import { useSelector } from 'react-redux';
 import { FaUsers } from 'react-icons/fa6';
 import { AiTwotonePropertySafety } from 'react-icons/ai';
 import { MdTrackChanges } from 'react-icons/md';
+import { MdPayment } from 'react-icons/md';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const location = useLocation();
@@ -235,7 +235,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       'bg-graydark dark:bg-meta-4'
                     }`}
                   >
-                    <MdTrackChanges />
+                    <MdPayment />
                     Single Room Bookings
                   </NavLink>
                 )}

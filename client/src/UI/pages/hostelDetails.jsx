@@ -205,7 +205,7 @@ const HostelDetails = () => {
                       <div className="ms-3">
                         <p className="font-medium text-black">Single Rooms</p>
                         <span className="text-slate-400 font-medium text-sm">
-                          {hostelData.SingleBedRooms}
+                          {hostelData.SingleBedRooms} Single Rooms
                         </span>
                       </div>
                     </li>
@@ -214,7 +214,7 @@ const HostelDetails = () => {
                       <div className="ms-3">
                         <p className="font-medium text-black">Double Rooms</p>
                         <span className="text-slate-400 font-medium text-sm">
-                          {hostelData.DoubleBedRooms}
+                          {hostelData.DoubleBedRooms} Double Rooms
                         </span>
                       </div>
                     </li>

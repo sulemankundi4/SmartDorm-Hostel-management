@@ -12,6 +12,7 @@ export const singleRoomBookingsApis = createApi({
         url: `get-all-bookings?userId=${userId}&isStudent=${isStudent}`,
         method: 'GET',
       }),
+      providesTags: ['SingleRoomBookings'],
     }),
     verifyBooking: builder.mutation({
       query: ({ bookingId }) => ({
@@ -19,6 +20,7 @@ export const singleRoomBookingsApis = createApi({
         method: 'POST',
         body: { bookingId },
       }),
+      invalidatesTags: ['SingleRoomBookings'],
     }),
   }),
 });

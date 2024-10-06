@@ -379,7 +379,6 @@ const AddNewListing = () => {
                             Select your currency
                           </option>
                           <option value="Pkr">PKR</option>
-                          <option value="USD">USD</option>
                         </select>
                       </div>
                       <div className="w-full xl:w-1/2">

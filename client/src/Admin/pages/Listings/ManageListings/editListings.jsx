@@ -24,6 +24,9 @@ const EditListing = () => {
   const [listingData, setListingData] = useState({});
   const [deleteImages, setDeleteImages] = useState([]);
   const [newImages, setNewImages] = useState({});
+  const [totalRooms, setTotalRooms] = useState(0);
+  const [singleBedRooms, setSingleBedRooms] = useState(0);
+  const [doubleBedRooms, setDoubleBedRooms] = useState(0);
   const [FoodMenu, setFoodMenu] = useState([
     {
       Day: 'Monday',
@@ -121,12 +124,38 @@ const EditListing = () => {
   const handleChange = async (e) => {
     e.preventDefault();
 
+    const { name, value, type, files } = e.target;
+
+    let numericSingleBedRooms = singleBedRooms;
+    let numericTotalRooms = totalRooms;
+
+    if (name === 'TotalRooms') {
+      numericTotalRooms = Number(value);
+      setTotalRooms(numericTotalRooms);
+    }
+
+    if (name === 'SingleBedRooms') {
+      numericSingleBedRooms = Number(value);
+      setSingleBedRooms(numericSingleBedRooms);
+    }
+
+    if (numericSingleBedRooms > numericTotalRooms) {
+      setSingleBedRooms('');
+      setDoubleBedRooms(numericTotalRooms);
+      return basicAlert(
+        'Validation Error',
+        'Single Bed Rooms should be less than or equal to Total Rooms',
+        'error',
+      );
+    }
+    setDoubleBedRooms(numericTotalRooms - numericSingleBedRooms);
+
     if (e.target.type === 'file') {
       const files = Array.from(e.target.files);
 
-      setNewImages({ ...newImages, [e.target.name]: files });
+      setNewImages({ ...newImages, [name]: files });
     } else {
-      setListingData({ ...listingData, [e.target.name]: e.target.value });
+      setListingData({ ...listingData, [name]: value });
     }
   };
 
@@ -154,9 +183,48 @@ const EditListing = () => {
   if (newImages?.HostelImages)
     newImagesUploaded = Array.from(newImages?.HostelImages);
 
+  console.log(listingData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const {
+        HostelName,
+        HostelProvince,
+        HostelCity,
+        PropertyType,
+        HostelAddress,
+        HostelDescription,
+        HostelImages,
+        Currency,
+        FoodMenu,
+        HostelRent,
+        HostelAddressProof,
+      } = listingData;
+
+      if (
+        !HostelName ||
+        !HostelProvince ||
+        !HostelCity ||
+        !PropertyType ||
+        !HostelAddress ||
+        !HostelDescription ||
+        !HostelImages.length ||
+        totalRooms === 0 ||
+        singleBedRooms === 0 ||
+        !HostelRent ||
+        doubleBedRooms === 0 ||
+        !Currency ||
+        !FoodMenu.length ||
+        !HostelAddressProof
+      ) {
+        return basicAlert(
+          'Validation Error',
+          `Please fill all the required fileds`,
+          'error',
+        );
+      }
+
       const storage = getStorage();
       //deleting the images incase if updated
       if (deleteImages.length > 0) {
@@ -236,6 +304,7 @@ const EditListing = () => {
 
       basicAlert('Oops...', `${res.error.message}', 'error' `);
     } catch (e) {
+      console.log(e);
       basicAlert('Oops...', 'Something went wrong...', 'error');
     }
   };
@@ -303,23 +372,56 @@ const EditListing = () => {
                           Select your currency
                         </option>
                         <option value="Pkr">PKR</option>
-                        <option value="USD">USD</option>
                       </select>
                     </div>
                     <div className="w-full xl:w-1/2">
                       <label className="mb-2.5 block text-black dark:text-white">
-                        Number Of Beds
+                        Total Rooms
                       </label>
                       <input
-                        name="NumberOfBeds"
-                        type="text"
-                        value={listingData.NumberOfBeds}
+                        name="TotalRooms"
+                        type="number"
+                        min={0}
+                        value={totalRooms}
                         onChange={handleChange}
-                        placeholder="Number of beds"
+                        placeholder="Number of Total Rooms"
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     </div>
                   </div>
+
+                  <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                    <div className="w-full xl:w-1/2">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Sinle Bed Rooms <span className="text-meta-1">*</span>
+                      </label>
+                      <input
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        name="SingleBedRooms"
+                        type="number"
+                        min={0}
+                        value={singleBedRooms}
+                        disabled={!totalRooms}
+                        placeholder="Enter the number of Single Bed Rooms"
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="w-full xl:w-1/2">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Double Bed Rooms
+                      </label>
+                      <input
+                        name="DoubleBedRooms"
+                        type="number"
+                        readOnly
+                        value={doubleBedRooms}
+                        onChange={handleChange}
+                        placeholder="Number of double bed rooms."
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
+                    </div>
+                  </div>
+
                   <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                     <div className="w-full ">
                       <label className="mb-2.5 block text-black dark:text-white">

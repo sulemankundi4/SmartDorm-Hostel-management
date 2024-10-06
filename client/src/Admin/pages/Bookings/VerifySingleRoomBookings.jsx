@@ -4,10 +4,15 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import { MdAdd } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useGetBookingsQuery } from '../../../Redux/api/singleRoomBookingsApis';
+import {
+  useGetBookingsQuery,
+  useVerifyBookingMutation,
+} from '../../../Redux/api/singleRoomBookingsApis';
 import Loader from '../../common/Loader';
 import toast from 'react-hot-toast';
 import { BsChevronRight } from 'react-icons/bs';
+import alerts from '../../../utils/alerts';
+import Swal from 'sweetalert2';
 
 const VerifySingleRoomBookings = () => {
   const { user } = useSelector((s) => s.userReducer);
@@ -16,15 +21,34 @@ const VerifySingleRoomBookings = () => {
     isStudent: false,
   });
 
+  const [verifyBooking] = useVerifyBookingMutation();
+  const { confirmAlert, basicAlert } = alerts();
+
   const bookingData = data?.bookings;
 
   if (isError) {
     return toast.error('An error occurred while fetching your bookings');
   }
 
-  const handleVerify = (bookingId) => {
+  const handleVerify = async (bookingId) => {
     // Add your verification logic here
-    console.log(`Verifying booking with ID: ${bookingId}`);
+    try {
+      const result = await confirmAlert('Are you sure want to verify Booking!');
+
+      if (result.isConfirmed) {
+        const { data } = await verifyBooking({ bookingId });
+
+        if (data.success) {
+          basicAlert('Verified!', 'This Booking has been verified!', 'success');
+        } else basicAlert('Failed!', data.message, 'error');
+      }
+
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        basicAlert('Cancelled', 'Booking Verification cancelled.', 'error');
+      }
+    } catch (error) {
+      toast.error('An error occurred while verifying booking');
+    }
   };
 
   return (
@@ -101,15 +125,6 @@ const VerifySingleRoomBookings = () => {
                       Verify
                     </button>
                   )}
-                  <div className="flex items-center mt-4">
-                    <Link
-                      to={`/listingDetails/${booking.HostelName._id}`}
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 transition-all duration-200"
-                    >
-                      See Summary
-                      <BsChevronRight size={18} />
-                    </Link>
-                  </div>
                 </div>
               ))}
             </div>
