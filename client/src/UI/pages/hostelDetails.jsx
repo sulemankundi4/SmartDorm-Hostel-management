@@ -77,6 +77,10 @@ const HostelDetails = () => {
   };
 
   const createPaymentIntent = async () => {
+    if (hostelData.SingleBedRooms === 0) {
+      setShowModal(false);
+      return toast.error('No Single Room Available');
+    }
     try {
       setSubmitting(true);
       const { data } = await createPaymentIntentApi({
