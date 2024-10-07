@@ -28,7 +28,7 @@ const CoummunityPage = ({ students }) => {
                 </td>
 
                 <td className="py-4 px-6 text-sm text-gray-500">
-                  {student.NoOfStudents}
+                  {student.count}
                 </td>
               </tr>
             ))}

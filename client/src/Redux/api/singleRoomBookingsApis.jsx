@@ -22,8 +22,17 @@ export const singleRoomBookingsApis = createApi({
       }),
       invalidatesTags: ['SingleRoomBookings'],
     }),
+    getCommunityStats: builder.query({
+      query: ({ hostelId }) => ({
+        url: `get-community-stats?hostelId=${hostelId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetBookingsQuery, useVerifyBookingMutation } =
-  singleRoomBookingsApis;
+export const {
+  useGetBookingsQuery,
+  useVerifyBookingMutation,
+  useGetCommunityStatsQuery,
+} = singleRoomBookingsApis;

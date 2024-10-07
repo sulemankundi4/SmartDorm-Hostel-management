@@ -13,8 +13,6 @@ import alerts from '../../../../utils/alerts';
 
 const CheckoutForm = ({ hostelId, amount, ownerId }) => {
   const { user } = useSelector((state) => state.userReducer);
-  console.log(user);
-  console.log(hostelId, amount, ownerId);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -23,16 +21,7 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { confirmAlert, basicAlert } = alerts();
 
-  const handleMonthsChange = (event) => {
-    setMonths(Number(event.target.value));
-  };
-
   const [singleRoomBooking] = useCreateSingleBedBookingMutation();
-
-  const monthlyRent = 500;
-  const utilities = 100;
-  const otherCharges = 50;
-  const total = (monthlyRent + utilities + otherCharges) * months;
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -42,11 +31,7 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
 
     const bookingData = {
       CheckInDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-      CheckOutDate: new Date(
-        new Date(new Date().setDate(new Date().getDate() + 1)).setMonth(
-          new Date().getMonth() + 1,
-        ),
-      ),
+
       Amount: amount,
       HostelOwnerName: ownerId,
       HostelName: hostelId,

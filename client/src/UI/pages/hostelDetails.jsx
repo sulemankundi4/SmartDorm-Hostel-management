@@ -18,6 +18,7 @@ import HostelReviews from '../components/HostelsComponents/hostelReviews.jsx';
 import { useCreatePaymentIntentMutation } from '../../Redux/api/paymentApis.jsx';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import { useGetCommunityStatsQuery } from '../../Redux/api/singleRoomBookingsApis.jsx';
 
 const HostelDetails = () => {
   const navigate = useNavigate();
@@ -49,6 +50,13 @@ const HostelDetails = () => {
   const { data, isLoading } = useGetListingDetailsQuery({
     listingId: hostelId,
   });
+
+  const { data: communityStats } = useGetCommunityStatsQuery({
+    hostelId: hostelId,
+  });
+
+  console.log(communityStats);
+  const communityStatsData = communityStats?.data;
 
   const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
 
@@ -360,7 +368,7 @@ const HostelDetails = () => {
                   </div>
 
                   <div className="text-black container mx-auto p-6 shadow-2xl rounded-lg">
-                    <CoummunityPage students={students} />
+                    <CoummunityPage students={communityStatsData} />
 
                     <section>
                       <FacilitiesSection facilities={hostelData?.Facilities} />

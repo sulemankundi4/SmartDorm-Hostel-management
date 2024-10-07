@@ -34,9 +34,9 @@ const createPaymentIntent = tryCatch(async (req, res, next) => {
 });
 
 const createSingleRoomBooking = tryCatch(async (req, res, next) => {
-  const { StudentName, HostelOwnerName, HostelName, CheckInDate, CheckOutDate, Amount } = req.body;
+  const { StudentName, HostelOwnerName, HostelName, CheckInDate, Amount } = req.body;
 
-  if (!StudentName || !HostelOwnerName || !HostelName || !CheckInDate || !CheckOutDate || !Amount) {
+  if (!StudentName || !HostelOwnerName || !HostelName || !CheckInDate || !Amount) {
     return next(new errorHandler("Please provide all required fields", 400));
   }
 
@@ -46,6 +46,12 @@ const createSingleRoomBooking = tryCatch(async (req, res, next) => {
   if (rooms.SingleBedRooms < 1) {
     return next(new errorHandler("No single rooms available in this hostel", 400));
   }
+
+  // Calculate CheckOutDate one month after CheckInDate
+  const CheckOutDate = new Date(CheckInDate);
+  CheckOutDate.setMonth(CheckOutDate.getMonth() + 1);
+
+  console.log(CheckInDate, CheckOutDate);
 
   const newBooking = await SingleBedBooking.create({
     StudentName,
