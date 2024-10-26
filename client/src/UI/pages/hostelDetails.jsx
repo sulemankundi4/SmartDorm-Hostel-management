@@ -22,45 +22,36 @@ import { useGetCommunityStatsQuery } from '../../Redux/api/singleRoomBookingsApi
 
 const HostelDetails = () => {
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.userReducer);
-  const students = [
-    {
-      university: 'Harvard University',
-      NoOfStudents: 12,
-    },
-    {
-      university: 'Stanford University',
-      NoOfStudents: 12,
-    },
-    {
-      university: 'ARID university Rawalpindi',
-      NoOfStudents: 12,
-    },
-    // Add more students as needed
-  ];
-
-  const [showModal, setShowModal] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const { hostelId } = useParams();
-  mapboxgl.accessToken = `pk.eyJ1Ijoic3VsZW1hbmt1bmRpNCIsImEiOiJjbHc3aGRrcG0xYmZvMm1yemE1aGE0ZjVjIn0.TT_W_UV0G3pGZ8VqtdUBBg`;
 
-  const mapContainer = useRef(null);
-  const map = useRef(null);
+  const { user } = useSelector((state) => state.userReducer);
 
   const { data, isLoading } = useGetListingDetailsQuery({
     listingId: hostelId,
   });
+  const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
 
   const { data: communityStats } = useGetCommunityStatsQuery({
     hostelId: hostelId,
   });
 
-  console.log(communityStats);
+  const hostelData = data?.payLoad;
+
+  const [selectedImage, setSelectedImage] = useState();
+
+  useEffect(() => {
+    setSelectedImage(hostelData?.HostelImages[0]);
+  }, []);
+
+  const [showModal, setShowModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  mapboxgl.accessToken = `pk.eyJ1Ijoic3VsZW1hbmt1bmRpNCIsImEiOiJjbHc3aGRrcG0xYmZvMm1yemE1aGE0ZjVjIn0.TT_W_UV0G3pGZ8VqtdUBBg`;
+
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+
   const communityStatsData = communityStats?.data;
 
-  const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
-
-  const hostelData = data?.payLoad;
   const longitude = hostelData?.Location?.coordinates[0];
   const latitude = hostelData?.Location?.coordinates[1];
 
@@ -144,7 +135,7 @@ const HostelDetails = () => {
             <div className="container relative">
               <div className="grid md:grid-cols-12 grid-cols-1 gap-6">
                 <div className="lg:col-span-8 md:col-span-7">
-                  <div className="grid grid-cols-12 gap-4">
+                  {/* <div className="grid grid-cols-12 gap-4">
                     <div className="md:col-span-8 col-span-7">
                       <div className="group relative overflow-hidden rounded shadow dark:shadow-gray-800">
                         <img
@@ -188,8 +179,27 @@ const HostelDetails = () => {
                         <div className="absolute inset-0 group-hover:bg-slate-900/70 duration-500 ease-in-out"></div>
                       </div>
                     </div>
+                  </div> */}
+                  <div className="main-image mb-4 rounded-lg overflow-hidden shadow-md">
+                    {selectedImage && (
+                      <img
+                        src={selectedImage}
+                        alt="Hostel"
+                        className="w-full h-80 object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
+                      />
+                    )}
                   </div>
-
+                  <div className="thumbnails flex space-x-2 overflow-x-auto p-2 bg-gray-100 rounded-lg shadow-inner">
+                    {hostelData?.HostelImages.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`Hostel thumbnail ${index + 1}`}
+                        className="w-24 h-24 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-red-500 hover:shadow-lg transition duration-300 transform hover:scale-105"
+                        onClick={() => setSelectedImage(image)}
+                      />
+                    ))}
+                  </div>
                   <div className="flex justify-between items-center">
                     <h5 className="text-2xl text-black font-semibold mt-5">
                       {hostelData.HostelName}
@@ -263,7 +273,7 @@ const HostelDetails = () => {
                   </div>
 
                   <div className="mt-6">
-                    {user && (
+                    {user && user?.Role === 'student' && (
                       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                         <div className="w-full md:w-1/2 p-4">
                           <div className="bg-white shadow-lg rounded-lg p-6 text-center">
@@ -377,101 +387,6 @@ const HostelDetails = () => {
                 </div>
 
                 <div className="lg:col-span-4 md:col-span-5">
-                  <div className="container relative shadow-lg">
-                    <div className="lg:col-span-4 md:col-span-5">
-                      <div className="sticky top-0">
-                        <div className="bg-white p-4 rounded-lg shadow-md">
-                          <div className="text-center mb-4">
-                            <p className="text-gray-500">From</p>
-                            <p className="text-2xl font-bold text-gray-800">
-                              PKRs2372.49
-                            </p>
-                          </div>
-
-                          <button className="bg-red-500 w-full text-white py-2 rounded-md font-bold">
-                            Choose a room
-                          </button>
-                          <div className="mt-4">
-                            <div className="flex items-center mb-2">
-                              <svg
-                                className="w-5 h-5 text-gray-500 mr-2"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M8 7V3m8 4V3m-9 8h10m-6 4h2m-6 4h10m-6 4h2"
-                                />
-                              </svg>
-                              <span>Booking only takes 2 minutes</span>
-                            </div>
-                            <div className="flex items-center">
-                              <svg
-                                className="w-5 h-5 text-gray-500 mr-2"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                              <span>Instant Confirmation</span>
-                            </div>
-                          </div>
-
-                          <div className="mt-4">
-                            <ul className="flex space-x-4">
-                              <li>
-                                <img
-                                  src="https://a.hwstatic.com/raw/upload/f_auto,q_auto/wds/logos/payment/visa.svg"
-                                  title="Visa"
-                                  alt="Visa"
-                                  aria-label="Visa"
-                                  className="w-8 h-8"
-                                />
-                              </li>
-                              <li>
-                                <img
-                                  src="https://a.hwstatic.com/raw/upload/f_auto,q_auto/wds/logos/payment/maestro.svg"
-                                  title="Maestro"
-                                  alt="Maestro"
-                                  aria-label="Maestro"
-                                  className="w-8 h-8"
-                                />
-                              </li>
-                              <li>
-                                <img
-                                  src="https://a.hwstatic.com/raw/upload/f_auto,q_auto/wds/logos/payment/mastercard.svg"
-                                  title="Mastercard"
-                                  alt="Mastercard"
-                                  aria-label="Mastercard"
-                                  className="w-8 h-8"
-                                />
-                              </li>
-                              <li>
-                                <img
-                                  src="https://a.hwstatic.com/raw/upload/f_auto,q_auto/wds/logos/payment/jcb.svg"
-                                  title="JCB"
-                                  alt="JCB"
-                                  aria-label="JCB"
-                                  className="w-8 h-8"
-                                />
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   <div className="p-4 rounded-md shadow-lg dark:shadow-gray-700 sticky top-0">
                     <div className="mt-6">
                       <h5 className="text-lg font-medium text-black">

@@ -32,7 +32,10 @@ const studentSchema = mongoose.Schema(
       type: String,
       required: [true, "University is required"],
     },
-
+    Role: {
+      type: String,
+      default: "student",
+    },
     IsEmailVerified: {
       type: Boolean,
       default: false,

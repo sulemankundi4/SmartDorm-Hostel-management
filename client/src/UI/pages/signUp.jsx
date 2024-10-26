@@ -34,6 +34,7 @@ const SignUp = () => {
 
   const [universities, setUniversities] = useState([]);
   const [selectedUniversity, setSelectedUniversity] = useState();
+  const [registrationType, setRegistrationType] = useState('normal');
 
   const fetchUniversities = async (inputValue) => {
     const response = await axios.get(
@@ -152,8 +153,9 @@ const SignUp = () => {
     setSelectedUniversity();
   };
 
-  console.log(formData);
-
+  const handleRegistrationTypeChange = (e) => {
+    setRegistrationType(e.target.value);
+  };
   return (
     <div className="rounded-sm min-h-screen flex items-center sm:justify-center px-[1rem] sm:px-0   bg-white">
       <div className="flex flex-wrap items-center py-10 w-full">
@@ -164,6 +166,19 @@ const SignUp = () => {
               Sign Up to SmartDorm
             </h2>
             <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="mb-2.5 block font-medium text-black dark:text-white">
+                  Register as
+                </label>
+                <select
+                  value={registrationType}
+                  onChange={handleRegistrationTypeChange}
+                  className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                >
+                  <option value="normal">Normal User</option>
+                  <option value="student">Student</option>
+                </select>
+              </div>
               <div className="mb-4">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
                   Name
@@ -312,62 +327,63 @@ const SignUp = () => {
                 </div>
               </div>
 
-              {from !== 'listYourProperty' && (
-                <div className="mb-6">
-                  <label
-                    className="mb-2.5 block font-medium text-black dark:text-white"
-                    {...getLabelProps()}
-                  >
-                    University
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      name="University"
-                      placeholder="Select your university"
-                      value={selectedUniversity || formData.University}
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      {...getInputProps()}
-                      disabled={selectedUniversity ? true : false}
-                    />
-                    {selectedUniversity && (
-                      <button
-                        type="button"
-                        onClick={handleEditClick}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                      >
-                        <AiOutlineEdit size={20} />
-                      </button>
-                    )}
-                    {universities.length > 0 && (
-                      <div className="absolute z-10 w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg mt-1">
-                        {isOpen && (
-                          <ul
-                            {...getMenuProps()}
-                            className="max-h-60 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700"
-                          >
-                            {universities.slice(0, 10).map((item, index) => (
-                              <li
-                                key={index}
-                                {...getItemProps({ item, index })}
-                                className={`cursor-pointer py-2 px-4 transition-colors duration-200 ${
-                                  highlightedIndex === index
-                                    ? 'bg-blue-500 text-white'
-                                    : 'bg-white dark:bg-gray-800 text-black dark:text-white'
-                                } ${
-                                  selectedItem === item ? 'font-bold' : ''
-                                } hover:bg-red-500 hover:text-white`}
-                              >
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    )}
+              {from !== 'listYourProperty' &&
+                registrationType === 'student' && (
+                  <div className="mb-6">
+                    <label
+                      className="mb-2.5 block font-medium text-black dark:text-white"
+                      {...getLabelProps()}
+                    >
+                      University
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="University"
+                        placeholder="Select your university"
+                        value={selectedUniversity || formData.University}
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        {...getInputProps()}
+                        disabled={selectedUniversity ? true : false}
+                      />
+                      {selectedUniversity && (
+                        <button
+                          type="button"
+                          onClick={handleEditClick}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          <AiOutlineEdit size={20} />
+                        </button>
+                      )}
+                      {universities.length > 0 && (
+                        <div className="absolute z-10 w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg mt-1">
+                          {isOpen && (
+                            <ul
+                              {...getMenuProps()}
+                              className="max-h-60 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700"
+                            >
+                              {universities.slice(0, 10).map((item, index) => (
+                                <li
+                                  key={index}
+                                  {...getItemProps({ item, index })}
+                                  className={`cursor-pointer py-2 px-4 transition-colors duration-200 ${
+                                    highlightedIndex === index
+                                      ? 'bg-blue-500 text-white'
+                                      : 'bg-white dark:bg-gray-800 text-black dark:text-white'
+                                  } ${
+                                    selectedItem === item ? 'font-bold' : ''
+                                  } hover:bg-red-500 hover:text-white`}
+                                >
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
               <div className="mb-5">
                 <button
                   disabled={loading}

@@ -34,15 +34,6 @@ const HostelCards = () => {
               <HostelCard key={item._id} item={item} />
             ))}
           </div>
-          <div className="mt-6 text-center">
-            <a
-              href="grid-right-sidebar.html"
-              className="text-slate-400 hover:text-red-500 inline-block"
-            >
-              See More Tours{' '}
-              <i className="mdi mdi-arrow-right align-middle"></i>
-            </a>
-          </div>
         </div>
       )}
     </>

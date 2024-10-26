@@ -5,7 +5,7 @@ import {
 } from '@stripe/react-stripe-js';
 
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useCreateSingleBedBookingMutation } from '../../../../Redux/api/paymentApis';
 import toast from 'react-hot-toast';
@@ -17,7 +17,6 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const [months, setMonths] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const { confirmAlert, basicAlert } = alerts();
 
@@ -31,7 +30,6 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
 
     const bookingData = {
       CheckInDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-
       Amount: amount,
       HostelOwnerName: ownerId,
       HostelName: hostelId,
