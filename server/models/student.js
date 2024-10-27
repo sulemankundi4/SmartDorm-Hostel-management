@@ -30,7 +30,12 @@ const studentSchema = mongoose.Schema(
     },
     University: {
       type: String,
-      required: [true, "University is required"],
+      validate: {
+        validator: function (val) {
+          return this.Role !== "student" || val !== undefined;
+        },
+        message: "University is required for student",
+      },
     },
     Role: {
       type: String,

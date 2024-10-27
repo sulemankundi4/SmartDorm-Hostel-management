@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../components/navBar';
 import TopBar from '../../components/topBar';
 import { useSelector } from 'react-redux';
@@ -8,16 +8,27 @@ import { useGetBookingsQuery } from '../../../Redux/api/singleRoomBookingsApis';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { BsChevronRight } from 'react-icons/bs';
+import ReviewModal from './components/reviewModel';
 
 const StudentBookings = () => {
   const { user } = useSelector((state) => state.userReducer);
-
   const { data, isLoading, isError } = useGetBookingsQuery({
     userId: user._id,
     isStudent: true,
   });
 
-  console.log(data, user._id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+
+  const openModal = (booking) => {
+    setSelectedBooking(booking);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedBooking(null);
+  };
 
   const bookingData = data?.bookings;
 
@@ -87,6 +98,14 @@ const StudentBookings = () => {
                             <span className="font-bold">Amount:</span> $
                             {booking.Amount}
                           </p>
+                          {booking.Status === 'confirmed' && (
+                            <button
+                              onClick={() => openModal(booking)}
+                              className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            >
+                              Review Hostel
+                            </button>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -97,6 +116,9 @@ const StudentBookings = () => {
           </div>
         </div>
       </section>
+      {isModalOpen && (
+        <ReviewModal booking={selectedBooking} closeModal={closeModal} />
+      )}
     </>
   );
 };

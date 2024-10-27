@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/email");
 const juice = require("juice");
 const { css, generateEmailTemplate } = require("../utils/confirmEmailTemplate");
+const Student = require("../models/student");
 
 const signToken = (id, type) => {
   return jwt.sign({ id, type }, process.env.JWT_SECRET, {
@@ -13,7 +14,7 @@ const signToken = (id, type) => {
 };
 
 const createAndSendToken = (user, statusCode, res, isEmailConfirming, type) => {
-  const token = signToken(user._id, type === "user" ? "user" : "student");
+  const token = signToken(user._id, type);
 
   const cookiesOption = {
     expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
@@ -40,6 +41,14 @@ const signUp = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide all the required fields", 400));
   }
 
+  // Check if email already exists in User or Student models
+  const existingUser = await Users.findOne({ Email });
+  const existingStudent = await Student.findOne({ Email });
+
+  if (existingUser || existingStudent) {
+    return next(new errorHandler("Email already exists", 400));
+  }
+
   const verificationToken = crypto.randomBytes(32).toString("hex");
   const token = crypto.createHash("sha256").update(verificationToken).digest("hex");
   const tokenExpire = Date.now() + 24 * 60 * 60 * 1000;
@@ -64,7 +73,7 @@ const signUp = tryCatch(async (req, res, next) => {
       message,
     });
 
-    createAndSendToken(user, 200, res, false, "user");
+    createAndSendToken(user, 200, res, false, Role);
 
     res.status(200).json({
       status: "success",
@@ -81,7 +90,14 @@ const login = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide email and password", 400));
   }
 
-  const user = await Users.findOne({ Email }).select("+Password");
+  const [existingStudent, existingUser] = await Promise.all([Student.findOne({ Email }).select("+Password"), Users.findOne({ Email }).select("+Password")]);
+
+  let user;
+  if (existingStudent) {
+    user = existingStudent;
+  } else if (existingUser) {
+    user = existingUser;
+  }
 
   if (!user || !(await user.correctPassword(Password, user.Password))) {
     return next(new errorHandler("Incorrect email or password", 401));
@@ -115,7 +131,8 @@ const redirect = tryCatch(async (req, res, next) => {
 });
 
 const getUserById = tryCatch(async (req, res, next) => {
-  const user = await Users.findById(req.params.id);
+  const [getUserByID, getStudentById] = await Promise.all([Users.findById(req.params.id), Student.findById(req.params.id)]);
+  const user = getUserByID || getStudentById;
 
   if (!user) {
     return next(new errorHandler("User not found", 404));

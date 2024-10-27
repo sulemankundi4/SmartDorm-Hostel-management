@@ -68,6 +68,9 @@ const HostelDetails = () => {
   });
 
   const handleBookNowClick = () => {
+    if (!user) {
+      return navigate('/signup');
+    }
     setShowModal(true);
   };
 
@@ -119,7 +122,7 @@ const HostelDetails = () => {
           <Navbar />
           <section
             className={`relative table w-full items-center py-36 bg-top bg-no-repeat bg-cover`}
-            style={{ backgroundImage: `url(${hostel1})` }}
+            style={{ backgroundImage: `url(${hostelData.HostelImages[1]})` }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-900"></div>
             <div className="container relative">
@@ -273,7 +276,7 @@ const HostelDetails = () => {
                   </div>
 
                   <div className="mt-6">
-                    {user && user?.Role === 'student' && (
+                    {user?.Role !== 'user' && (
                       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                         <div className="w-full md:w-1/2 p-4">
                           <div className="bg-white shadow-lg rounded-lg p-6 text-center">

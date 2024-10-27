@@ -5,12 +5,25 @@ const sendEmail = require("../utils/email");
 const juice = require("juice");
 const { css, generateEmailTemplate } = require("../utils/confirmEmailTemplate");
 const { createAndSendToken } = require("./userController");
+const Users = require("../models/user");
 
 const studentSignUp = tryCatch(async (req, res, next) => {
-  const { Name, Email, Password, ConfirmPassword, University } = req.body;
+  const { Name, Email, Password, ConfirmPassword, University, Role } = req.body;
 
-  if (!Name || !Email || !Password || !ConfirmPassword || !University) {
+  if (!Name || !Email || !Password || !ConfirmPassword || !Role) {
     return next(new errorHandler("Please provide all the required fields", 400));
+  }
+
+  if (Role === "student" && !University) {
+    return next(new errorHandler("Please provide the university for student role", 400));
+  }
+
+  // Check if email already exists in User or Student models
+  const existingUser = await Users.findOne({ Email });
+  const existingStudent = await Student.findOne({ Email });
+
+  if (existingUser || existingStudent) {
+    return next(new errorHandler("Email already exists", 400));
   }
 
   const verificationToken = crypto.randomBytes(32).toString("hex");
@@ -22,10 +35,12 @@ const studentSignUp = tryCatch(async (req, res, next) => {
     Email,
     Password,
     ConfirmPassword,
-    University,
+    University: Role === "student" ? University : undefined,
+    Role,
     EmailVerificationToken: token,
     EmailVerificationTokenExpires: tokenExpire,
   });
+
   const verificatonLink = `${req.protocol}://${req.get("host")}/api/v1/users/verifyEmail/${verificationToken}`;
   const html = generateEmailTemplate(verificatonLink, user);
   const message = juice.inlineContent(html, css);
@@ -37,7 +52,7 @@ const studentSignUp = tryCatch(async (req, res, next) => {
       message,
     });
 
-    createAndSendToken(user, 200, res, false, "student");
+    createAndSendToken(user, 200, res, false, Role);
 
     return res.status(200).json({
       status: "success",
@@ -48,38 +63,6 @@ const studentSignUp = tryCatch(async (req, res, next) => {
   }
 });
 
-const getStudentById = tryCatch(async (req, res, next) => {
-  const user = await Student.findById(req.params.id);
-
-  if (!user) {
-    return next(new errorHandler("Student not found", 404));
-  }
-
-  res.status(200).json({
-    status: "success",
-    payLoad: {
-      user,
-    },
-  });
-});
-
-const studenLogin = tryCatch(async (req, res, next) => {
-  const { Email, Password } = req.body;
-  if (!Email || !Password) {
-    return next(new errorHandler("Please provide email and password", 400));
-  }
-
-  const user = await Student.findOne({ Email }).select("+Password");
-
-  if (!user || !(await user.correctPassword(Password, user.Password))) {
-    return next(new errorHandler("Incorrect email or password", 401));
-  }
-
-  createAndSendToken(user, 200, res, false, "student");
-});
-
 module.exports = {
   studentSignUp,
-  studenLogin,
-  getStudentById,
 };

@@ -59,13 +59,8 @@ export const getLoggedInUser = async (id, userType) => {
   try {
     let res;
 
-    if (userType === 'user') {
-      const { data } = await axios.get(`${server}/api/v1/users/${id}`);
-      res = data;
-    } else {
-      const { data } = await axios.get(`${server}/api/v1/students/${id}`);
-      res = data;
-    }
+    const { data } = await axios.get(`${server}/api/v1/users/${id}`);
+    res = data;
 
     console.log(res);
     return res.payLoad.user;
