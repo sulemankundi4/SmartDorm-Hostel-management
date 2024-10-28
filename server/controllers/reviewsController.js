@@ -27,7 +27,6 @@ const reviewHostel = tryCatch(async (req, res, next) => {
 });
 
 const getReviewsOfHostel = tryCatch(async (req, res, next) => {
-  // Getting from parameter url
   const { hostelId } = req.query;
 
   if (!hostelId) {
@@ -35,7 +34,7 @@ const getReviewsOfHostel = tryCatch(async (req, res, next) => {
   }
 
   // Get all reviews of a hostel
-  const reviews = await Review.find({ HostelName: hostelId });
+  const reviews = await Review.find({ HostelName: hostelId }).populate("UserName", "Name Email");
 
   return res.status(200).json({
     status: "success",

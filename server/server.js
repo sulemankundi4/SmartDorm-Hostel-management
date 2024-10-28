@@ -13,7 +13,6 @@ const studentsRouter = require("./routes/student");
 const paymentRouter = require("./routes/payment");
 const singleRoomBookings = require("./routes/singleRoomBooking");
 const hostelReviews = require("./routes/reviews");
-const { reviewHostel } = require("./controllers/reviewsController");
 const app = express();
 
 app.use(express.json());
@@ -39,7 +38,7 @@ app.use("/api/v1/tickets", userTicketsRouter);
 app.use("/api/v1/students", studentsRouter);
 app.use("/api/v1/payments", paymentRouter);
 app.use("/api/v1/single-room-booking", singleRoomBookings);
-app.use("/api/v1/reviews", reviewHostel);
+app.use("/api/v1/reviews", hostelReviews);
 
 app.listen(port, () => {
   console.log(`Server is running at port ${port}`);

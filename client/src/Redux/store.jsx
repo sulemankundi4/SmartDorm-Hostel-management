@@ -6,6 +6,7 @@ import { ticketApis } from './api/ticketApis';
 import { studentApis } from './api/studentApis';
 import { paymentApis } from './api/paymentApis';
 import { singleRoomBookingsApis } from './api/singleRoomBookingsApis';
+import { reviewsAPIs } from './api/reviewsApis';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [studentApis.reducerPath]: studentApis.reducer,
     [paymentApis.reducerPath]: paymentApis.reducer,
     [singleRoomBookingsApis.reducerPath]: singleRoomBookingsApis.reducer,
+    [reviewsAPIs.reducerPath]: reviewsAPIs.reducer,
   },
   middleware: (mid) => [
     ...mid(),
@@ -25,5 +27,6 @@ export const store = configureStore({
     studentApis.middleware,
     paymentApis.middleware,
     singleRoomBookingsApis.middleware,
+    reviewsAPIs.middleware,
   ],
 });

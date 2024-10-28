@@ -6,7 +6,10 @@ import mapboxgl from 'mapbox-gl';
 import { FiActivity } from 'react-icons/fi';
 import { FaCross, FaGlobe, FaRupeeSign } from 'react-icons/fa6';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetListingDetailsQuery } from '../../Redux/api/hostelApis';
+import {
+  useGetAllListingsQuery,
+  useGetListingDetailsQuery,
+} from '../../Redux/api/hostelApis';
 import Loader from '../../Admin/common/Loader';
 import { IoBedSharp } from 'react-icons/io5';
 import '../style/style.css';
@@ -29,6 +32,7 @@ const HostelDetails = () => {
   const { data, isLoading } = useGetListingDetailsQuery({
     listingId: hostelId,
   });
+
   const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
 
   const { data: communityStats } = useGetCommunityStatsQuery({
@@ -410,7 +414,7 @@ const HostelDetails = () => {
         </div>
       )}
 
-      <HostelReviews />
+      <HostelReviews hostelId={hostelId} />
     </>
   );
 };

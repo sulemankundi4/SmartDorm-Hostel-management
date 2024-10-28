@@ -1,17 +1,41 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { AiFillStar, AiOutlineStar, AiOutlineClose } from 'react-icons/ai';
+import { useAddReviewMutation } from '../../../../Redux/api/reviewsApis';
 
 const ReviewModal = ({ booking, closeModal }) => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState('');
+  const [addReview] = useAddReviewMutation();
+  console.log(booking);
 
   const handleRating = (rate) => {
     setRating(rate);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    closeModal();
+    try {
+      const review = await addReview({
+        body: {
+          Ratings: rating,
+          Description: description,
+          UserName: booking.StudentName._id,
+          HostelName: booking.HostelName._id,
+        },
+      });
+      console.log(review);
+      if (review.error) {
+        return toast.error('An error occurred while submitting your review');
+      }
+
+      toast.success('Review submitted successfully');
+    } catch (e) {
+      console.log(e);
+      toast.error('An error occurred while submitting your review');
+    } finally {
+      closeModal();
+    }
   };
 
   return (
@@ -62,6 +86,7 @@ const ReviewModal = ({ booking, closeModal }) => {
             </button>
             <button
               type="submit"
+              onClick={handleSubmit}
               className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
             >
               Submit
