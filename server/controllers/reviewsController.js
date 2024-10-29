@@ -44,7 +44,27 @@ const getReviewsOfHostel = tryCatch(async (req, res, next) => {
   });
 });
 
+const hasUserReviewedHostel = tryCatch(async (req, res, next) => {
+  const { userId, hostelId } = req.query;
+
+  if (!userId || !hostelId) {
+    return next(new errorHandler("Please provide both user ID and hostel ID", 400));
+  }
+
+  // Check if the user has reviewed the hostel
+  const review = await Review.findOne({ UserName: userId, HostelName: hostelId });
+  console.log(review);
+
+  return res.status(200).json({
+    status: "success",
+    data: {
+      userReview: review,
+      hasReviewed: !!review,
+    },
+  });
+});
 module.exports = {
   reviewHostel,
   getReviewsOfHostel,
+  hasUserReviewedHostel,
 };

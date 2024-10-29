@@ -33,6 +33,7 @@ import TicketDetails from './Admin/pages/Tickets/TicketDetails';
 import StudentProfile from './UI/pages/Students/studentProfile';
 import VerifySingleRoomBookings from './Admin/pages/Bookings/VerifySingleRoomBookings';
 import StudentBookings from './UI/pages/Students/studentBookings';
+import StudentReviews from './UI/pages/Students/components/studentReviews';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -122,6 +123,16 @@ function App() {
               <>
                 <PageTitle title="Student Bookings | SmartDorm" />
                 <StudentBookings />
+              </>
+            }
+          />
+
+          <Route
+            path="/student-reviews"
+            element={
+              <>
+                <PageTitle title="Student Reviews | SmartDorm" />
+                <StudentReviews />
               </>
             }
           />

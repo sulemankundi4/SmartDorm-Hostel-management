@@ -17,11 +17,13 @@ import '../style/style.css';
 import FacilitiesSection from '../components/facilities.jsx';
 import FoodMenu from '../components/HostelsComponents/foodMenu.jsx';
 import CoummunityPage from '../components/HostelsComponents/coummunityPage.jsx';
-import HostelReviews from '../components/HostelsComponents/hostelReviews.jsx';
 import { useCreatePaymentIntentMutation } from '../../Redux/api/paymentApis.jsx';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useGetCommunityStatsQuery } from '../../Redux/api/singleRoomBookingsApis.jsx';
+
+import { useGetAllReviewsOfHostelQuery } from '../../Redux/api/reviewsApis.jsx';
+import ReviewsSlider from '../components/HostelsComponents/hostelReviews.jsx';
 
 const HostelDetails = () => {
   const navigate = useNavigate();
@@ -38,7 +40,10 @@ const HostelDetails = () => {
   const { data: communityStats } = useGetCommunityStatsQuery({
     hostelId: hostelId,
   });
-
+  const { data: hostelReviews, isLoading: loadingReviews } =
+    useGetAllReviewsOfHostelQuery({
+      hostelId,
+    });
   const hostelData = data?.payLoad;
 
   const [selectedImage, setSelectedImage] = useState();
@@ -118,7 +123,7 @@ const HostelDetails = () => {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || loadingReviews ? (
         <Loader />
       ) : (
         <div className="bg-white">
@@ -142,51 +147,6 @@ const HostelDetails = () => {
             <div className="container relative">
               <div className="grid md:grid-cols-12 grid-cols-1 gap-6">
                 <div className="lg:col-span-8 md:col-span-7">
-                  {/* <div className="grid grid-cols-12 gap-4">
-                    <div className="md:col-span-8 col-span-7">
-                      <div className="group relative overflow-hidden rounded shadow dark:shadow-gray-800">
-                        <img
-                          src={hostelData.HostelImages[0] || hostel1}
-                          className="w-full lg:h-60 md:h-44 h-48 object-cover"
-                          alt=""
-                        />
-                        <div className="absolute inset-0 group-hover:bg-slate-900/70 duration-500 ease-in-out"></div>
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-4 col-span-5">
-                      <div className="group relative overflow-hidden rounded shadow dark:shadow-gray-800">
-                        <img
-                          src={hostelData.HostelImages[1] || hostel1}
-                          className="w-full lg:h-60 md:h-44 h-48 object-cover"
-                          alt=""
-                        />
-                        <div className="absolute inset-0 group-hover:bg-slate-900/70 duration-500 ease-in-out"></div>
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-4 col-span-5">
-                      <div className="group relative overflow-hidden rounded shadow dark:shadow-gray-800">
-                        <img
-                          src={hostelData.HostelImages[2] || hostel1}
-                          className="w-full lg:h-60 md:h-44 h-48 object-cover"
-                          alt=""
-                        />
-                        <div className="absolute inset-0 group-hover:bg-slate-900/70 duration-500 ease-in-out"></div>
-                      </div>
-                    </div>
-
-                    <div className="md:col-span-8 col-span-7">
-                      <div className="group relative overflow-hidden rounded shadow dark:shadow-gray-800">
-                        <img
-                          src={hostelData.HostelImages[3] || hostel1}
-                          className="w-full lg:h-60 md:h-44 h-48 object-cover"
-                          alt=""
-                        />
-                        <div className="absolute inset-0 group-hover:bg-slate-900/70 duration-500 ease-in-out"></div>
-                      </div>
-                    </div>
-                  </div> */}
                   <div className="main-image mb-4 rounded-lg overflow-hidden shadow-md">
                     {selectedImage && (
                       <img
@@ -411,10 +371,9 @@ const HostelDetails = () => {
               </div>
             </div>
           </section>
+          <ReviewsSlider reviews={hostelReviews.data.reviews} />
         </div>
       )}
-
-      <HostelReviews hostelId={hostelId} />
     </>
   );
 };

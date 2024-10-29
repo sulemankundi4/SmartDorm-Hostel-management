@@ -20,8 +20,17 @@ export const reviewsAPIs = createApi({
         method: 'GET',
       }),
     }),
+    hasUserReviewedHostel: builder.query({
+      query: ({ userId, hostelId }) => ({
+        url: `has-reviewed?userId=${userId}&hostelId=${hostelId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetAllReviewsOfHostelQuery, useAddReviewMutation } =
-  reviewsAPIs;
+export const {
+  useGetAllReviewsOfHostelQuery,
+  useAddReviewMutation,
+  useHasUserReviewedHostelQuery,
+} = reviewsAPIs;

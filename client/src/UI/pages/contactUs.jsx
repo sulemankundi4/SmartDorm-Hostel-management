@@ -9,8 +9,10 @@ import Footer from '../components/footer';
 import { useCreateTicketMutation } from '../../Redux/api/ticketApis';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const ContactUs = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userName: '',
     userEmail: '',
@@ -56,7 +58,7 @@ const ContactUs = () => {
       });
       navigate('/');
     } catch (e) {
-      toast.error('Something went wrong during sign in');
+      toast.error(e);
     }
   };
 
