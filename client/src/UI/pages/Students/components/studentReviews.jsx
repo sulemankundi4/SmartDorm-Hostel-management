@@ -129,7 +129,7 @@ const StudentReviews = () => {
                               className={`${
                                 star <= reviewData.data.userReview.Ratings
                                   ? 'text-yellow-500'
-                                  : 'text-gray-300'
+                                  : 'text-[#afafaf]'
                               }`}
                               size={24}
                             />

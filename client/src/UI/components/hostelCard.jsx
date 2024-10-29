@@ -4,7 +4,9 @@ import { FaHeart, FaStar } from 'react-icons/fa6';
 import { IoLocationOutline } from 'react-icons/io5';
 import { BsArrowRight } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-const HostelCard = ({ item }) => {
+import { AiFillStar } from 'react-icons/ai';
+
+const HostelCard = ({ item, rating }) => {
   return (
     <div className="group rounded-md shadow dark:shadow-gray-700">
       <div className="relative overflow-hidden rounded-t-md shadow dark:shadow-gray-700 mx-3 mt-3">
@@ -41,27 +43,33 @@ const HostelCard = ({ item }) => {
           {item?.HostelName}
         </Link>
 
-        <div className="flex items-center mt-2">
+        <div className="flex items-center mt-4">
           <span className="text-slate-400">Rating:</span>
           <ul className="text-lg flex font-medium text-amber-400 list-none ms-2">
-            <li className="inline">
-              <FaStar className="align-middle" />
-            </li>
-            <li className="inline">
-              <FaStar className="align-middle" />
-            </li>
-            <li className="inline">
-              <FaStar className="align-middle" />
-            </li>
-            <li className="inline">
-              <FaStar className="align-middle" />
-            </li>
-            <li className="inline">
-              <FaStar className="align-middle" />
-            </li>
-            <li className="inline ms-1 text-black dark:text-white text-sm">
-              5.0(30)
-            </li>
+            {rating ? (
+              <>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <li key={star} className="inline">
+                    <AiFillStar
+                      key={star}
+                      className={`${
+                        star <= rating.roundedRating
+                          ? 'text-yellow-500'
+                          : 'text-[#afafaf]'
+                      }`}
+                      size={24}
+                    />
+                  </li>
+                ))}
+                <li className="inline ms-1 text-black dark:text-white text-sm">
+                  {rating.averageRating} ({rating.totalReviews})
+                </li>
+              </>
+            ) : (
+              <li className="inline ms-1 text-black dark:text-white text-sm">
+                No ratings
+              </li>
+            )}
           </ul>
         </div>
 
@@ -72,7 +80,7 @@ const HostelCard = ({ item }) => {
 
           <Link
             to={`/hostelDetails/${item._id}`}
-            className="flex items-center  text-slate-400 hover:text-red-500"
+            className="flex items-center text-slate-400 hover:text-red-500"
           >
             Explore Now <BsArrowRight className="align-middle ms-1" />
           </Link>

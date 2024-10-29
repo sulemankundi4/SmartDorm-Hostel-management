@@ -28,7 +28,7 @@ const AllListings = () => {
   }
 
   const verifyHandler = async (listingid) => {
-    const result = await confirmAlert();
+    const result = await confirmAlert('Are you sure want to verify Listing?');
     if (result.isConfirmed) {
       const res = await verifyListing({
         id: user._id,

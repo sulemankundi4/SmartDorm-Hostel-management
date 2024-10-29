@@ -63,8 +63,36 @@ const hasUserReviewedHostel = tryCatch(async (req, res, next) => {
     },
   });
 });
+
+const getHostelRatings = tryCatch(async (req, res, next) => {
+  const ratings = await Review.aggregate([
+    {
+      $group: {
+        _id: "$HostelName",
+        averageRating: { $avg: "$Ratings" },
+        totalReviews: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        hostelId: "$_id",
+        averageRating: { $round: ["$averageRating", 1] },
+        totalReviews: 1,
+        roundedRating: { $round: ["$averageRating", 0] },
+      },
+    },
+  ]);
+
+  return res.status(200).json({
+    status: "success",
+    data: ratings,
+  });
+});
+
 module.exports = {
   reviewHostel,
+  getHostelRatings,
   getReviewsOfHostel,
   hasUserReviewedHostel,
 };

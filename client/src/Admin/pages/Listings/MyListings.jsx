@@ -69,12 +69,12 @@ const MyListings = () => {
                             className="mr-2 text-black dark:text-white"
                           />
                           <div className="flex items-center">
-                            <a
-                              href="/en/listings/1410297/summary"
+                            <Link
+                              to={`/listingDetails/${lisitng._id}`}
                               className="text-lg font-semibold text-black underline dark:text-white mr-2"
                             >
                               {lisitng.HostelName}
-                            </a>
+                            </Link>
                             <span
                               className={`text-white rounded-full px-2 py-1 text-xs  ${
                                 lisitng.Status === 'Pending'

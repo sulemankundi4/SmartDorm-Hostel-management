@@ -55,14 +55,14 @@ const HostelReviews = ({ reviews }) => {
                         </h5>
                       </div>
                     </div>
-                    <div className="flex items-center mb-4 sm:mb-4 gap-2 text-amber-500 transition-all duration-500">
+                    <div className="flex items-center mb-4 sm:mb-4 gap-1 text-amber-500 transition-all duration-500">
                       {[1, 2, 3, 4, 5].map(
                         (star) =>
                           star <= review.Ratings && (
                             <AiFillStar
                               key={star}
                               className="text-yellow-500"
-                              size={18}
+                              size={20}
                             />
                           ),
                       )}

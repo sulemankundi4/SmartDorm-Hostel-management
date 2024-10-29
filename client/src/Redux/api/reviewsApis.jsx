@@ -26,6 +26,12 @@ export const reviewsAPIs = createApi({
         method: 'GET',
       }),
     }),
+    averageRatings: builder.query({
+      query: () => ({
+        url: `hostel-ratings`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -33,4 +39,5 @@ export const {
   useGetAllReviewsOfHostelQuery,
   useAddReviewMutation,
   useHasUserReviewedHostelQuery,
+  useAverageRatingsQuery,
 } = reviewsAPIs;

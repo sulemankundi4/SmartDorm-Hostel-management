@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const SideBar = () => {
-  const user = useSelector((state) => state.userReducer);
+  const { user } = useSelector((state) => state.userReducer);
   return (
     <div className="lg:w-1/4 md:w-1/3 md:px-3">
       <div className="relative">

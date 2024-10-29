@@ -371,7 +371,9 @@ const HostelDetails = () => {
               </div>
             </div>
           </section>
-          <ReviewsSlider reviews={hostelReviews.data.reviews} />
+          {hostelReviews.data.reviews.length > 0 && (
+            <ReviewsSlider reviews={hostelReviews.data.reviews} />
+          )}
         </div>
       )}
     </>
