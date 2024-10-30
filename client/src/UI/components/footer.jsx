@@ -1,16 +1,12 @@
 import React from 'react';
 import {
-  BsCart,
-  BsChevronBarRight,
-  BsChevronCompactLeft,
   BsChevronCompactRight,
   BsFillArrowThroughHeartFill,
-  BsHeart,
-  BsMailbox,
   BsTelephone,
 } from 'react-icons/bs';
 import { IoLocationOutline, IoMail } from 'react-icons/io5';
-import { MdAllInbox, MdMailOutline } from 'react-icons/md';
+import { MdMailOutline } from 'react-icons/md';
+import logo from '../../assets/Images/logo.png';
 
 const Footer = () => {
   return (
@@ -22,12 +18,12 @@ const Footer = () => {
               <div className="py-[60px] px-0">
                 <div className="grid md:grid-cols-12 grid-cols-1 gap-6">
                   <div className="lg:col-span-3 md:col-span-12">
-                    <a href="#" className="text-[22px] focus:outline-none">
-                      <img src="assets/images/logo-light.png" alt="" />
-                    </a>
                     <p className="mt-6 text-gray-300">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Impedit, animi.
+                      SmartDorm is dedicated to providing a comfortable and
+                      secure living environment for students. Our hostels are
+                      equipped with modern amenities to ensure a pleasant stay.
+                      We strive to create a community where students can focus
+                      on their studies and personal growth.
                     </p>
                   </div>
 

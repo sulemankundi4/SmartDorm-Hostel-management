@@ -57,12 +57,6 @@ const FacilitiesSection = ({ facilities }) => {
                 </div>
               ))}
             </div>
-            <button className="mt-6 flex items-center justify-center text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
-              <span className="mr-2">View all facilities</span>
-              <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-                <use xlinkHref="#chevron-right" href="#chevron-right"></use>
-              </svg>
-            </button>
           </div>
         </>
       ) : null}

@@ -15,20 +15,6 @@ const HostelCard = ({ item, rating }) => {
           className="scale-125 group-hover:scale-100 duration-500"
           alt=""
         />
-        <div className="absolute top-0 start-0 p-4">
-          <span className="bg-red-500 text-white text-[12px] px-2.5 py-1 font-medium rounded-md h-5">
-            10% Off
-          </span>
-        </div>
-
-        <div className="absolute top-0 end-0 p-4">
-          <a
-            href="javascript:void(0)"
-            className="size-8 inline-flex justify-center items-center bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 rounded-full text-slate-100 dark:text-slate-700 focus:text-red-500 dark:focus:text-red-500 hover:text-red-500 dark:hover:text-red-500"
-          >
-            <FaHeart />
-          </a>
-        </div>
       </div>
 
       <div className="p-4">

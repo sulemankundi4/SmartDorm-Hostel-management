@@ -33,7 +33,7 @@ const LandinPage = () => {
         <div className="flex items-center lg:w-auto w-full md:w-[80%] flex-col">
           <div className="overflow-hidden w-full lg:w-[30rem] xl:w-[40rem] bg-white rounded-md shadow-9 relative p-5 lg:p-8">
             <img
-              src="https://histudy-nextjs.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fcourse-elegant-01.bbef5352.jpg&w=640&q=75"
+              src="https://images.unsplash.com/photo-1527853787696-f7be74f2e39a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG9zdGVsfGVufDB8fDB8fHww"
               alt=""
               className="rounded-lg"
             />

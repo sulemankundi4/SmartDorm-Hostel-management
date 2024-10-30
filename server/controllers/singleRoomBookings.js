@@ -60,6 +60,11 @@ const getCommunityPageStatsUniversity = tryCatch(async (req, res, next) => {
     },
     { $unwind: "$studentDetails" },
     {
+      $match: {
+        "studentDetails.University": { $ne: null },
+      },
+    },
+    {
       $group: {
         _id: "$studentDetails.University",
         count: { $sum: 1 },
