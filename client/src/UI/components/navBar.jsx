@@ -50,7 +50,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="absolute top-0 sm:top-13 z-9 w-[100%] ">
+    <div className="absolute top-1 sm:top-13 z-9 w-[100%] ">
       <nav className="w-full flex justify-between px-[2rem] md:px-[4rem]  h-[5rem] text-lg font-bold items-center bg-white drop-shadow-2">
         <div>
           <img className="h-60 w-55" src={logo} alt="Logo" />
