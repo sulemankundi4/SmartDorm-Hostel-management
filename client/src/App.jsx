@@ -34,6 +34,8 @@ import StudentProfile from './UI/pages/Students/studentProfile';
 import VerifySingleRoomBookings from './Admin/pages/Bookings/VerifySingleRoomBookings';
 import StudentBookings from './UI/pages/Students/studentBookings';
 import StudentReviews from './UI/pages/Students/components/studentReviews';
+import ForgotPassword from './UI/pages/forgotPassword';
+import ResetPassword from './UI/pages/resetPassword';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -95,6 +97,24 @@ function App() {
             <>
               <PageTitle title="SmartDorm | Redefining Hostel Living with Ease" />
               <LandinPage />
+            </>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <>
+              <PageTitle title="SmartDorm | Redefining Hostel Living with Ease" />
+              <ForgotPassword />
+            </>
+          }
+        />
+        <Route
+          path="/reset-password/:token"
+          element={
+            <>
+              <PageTitle title="SmartDorm | Redefining Hostel Living with Ease" />
+              <ResetPassword />
             </>
           }
         />

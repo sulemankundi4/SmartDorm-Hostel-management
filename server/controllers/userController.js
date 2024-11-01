@@ -270,6 +270,99 @@ const getUserByUid = tryCatch(async (req, res, next) => {
   });
 });
 
+const forgotPassword = tryCatch(async (req, res, next) => {
+  const { Email } = req.body;
+
+  console.log(Email);
+
+  if (!Email) {
+    return next(new errorHandler("Please provide an email", 400));
+  }
+
+  const user = (await Users.findOne({ Email })) || (await Student.findOne({ Email }));
+
+  if (!user) {
+    return next(new errorHandler("There is no user with that email address", 404));
+  }
+
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+
+  try {
+    await sendEmail({
+      email: user.Email,
+      subject: "Your password reset token (valid for 10 minutes)",
+      message,
+    });
+
+    res.status(200).json({
+      status: "success",
+      token: resetToken,
+      message: "Token sent to email!",
+    });
+  } catch (err) {
+    user.PasswordResetToken = undefined;
+    user.PasswordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(new errorHandler("There was an error sending the email. Try again later!", 500));
+  }
+});
+
+const resetPassword = tryCatch(async (req, res, next) => {
+  const hashedToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+
+  const user =
+    (await Users.findOne({
+      PasswordResetToken: hashedToken,
+      PasswordResetExpires: { $gt: Date.now() },
+    })) ||
+    (await Student.findOne({
+      PasswordResetToken: hashedToken,
+      PasswordResetExpires: { $gt: Date.now() },
+    }));
+
+  if (!user) {
+    return next(new errorHandler("Token is invalid or has expired", 400));
+  }
+
+  user.Password = req.body.Password;
+  user.ConfirmPassword = req.body.ConfirmPassword;
+  user.PasswordResetToken = undefined;
+  user.PasswordResetExpires = undefined;
+  await user.save();
+
+  createAndSendToken(user, 200, res, false, "user");
+});
+
+const validatePasswordResetToken = tryCatch(async (req, res, next) => {
+  const { token } = req.params;
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user =
+    (await Users.findOne({
+      PasswordResetToken: hashedToken,
+      PasswordResetExpires: { $gt: Date.now() },
+    })) ||
+    (await Student.findOne({
+      PasswordResetToken: hashedToken,
+      PasswordResetExpires: { $gt: Date.now() },
+    }));
+
+  if (!user) {
+    return next(new errorHandler("Token is invalid or has expired", 400));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Token is valid",
+  });
+});
+
 module.exports = {
   signUp,
   login,
@@ -282,4 +375,7 @@ module.exports = {
   getUserByUid,
   googleAuth,
   createAndSendToken,
+  forgotPassword,
+  resetPassword,
+  validatePasswordResetToken,
 };

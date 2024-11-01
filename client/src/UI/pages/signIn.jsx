@@ -179,6 +179,11 @@ const SignIn = () => {
                     Sign Up
                   </Link>
                 </p>
+                <p className="mt-2">
+                  <Link to="/forgot-password" className="text-primary">
+                    Forgot Password?
+                  </Link>
+                </p>
               </div>
             </form>
           </div>

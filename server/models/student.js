@@ -82,5 +82,14 @@ studentSchema.methods.createEmailVerificationToken = function () {
   return verificationToken;
 };
 
+studentSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  this.PasswordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.PasswordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  return resetToken;
+};
+
 const Student = mongoose.model("Student", studentSchema);
 module.exports = Student;

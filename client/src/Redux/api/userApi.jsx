@@ -40,6 +40,26 @@ export const userApi = createApi({
       query: (id) => `allUsers?id=${id}`,
       method: 'GET',
     }),
+    forgotPassword: builder.mutation({
+      query: ({ Email }) => ({
+        url: 'forgot-password',
+        method: 'POST',
+        body: { Email },
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({ token, Password, ConfirmPassword }) => ({
+        url: `reset-password/${token}`,
+        method: 'PATCH',
+        body: { Password, ConfirmPassword },
+      }),
+    }),
+    validatePasswordResetToken: builder.mutation({
+      query: ({ token }) => ({
+        url: `validate-password-reset-token/${token}`,
+        method: 'GET',
+      }),
+    }),
     googleLogin: builder.mutation({
       query: ({ Email, Name, uid, isOwner }) => ({
         url: 'googleAuth',
@@ -85,4 +105,7 @@ export const {
   useResendEmailMutation,
   useGoogleLoginMutation,
   useGetAllUsersQuery,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useValidatePasswordResetTokenMutation,
 } = userApi;
