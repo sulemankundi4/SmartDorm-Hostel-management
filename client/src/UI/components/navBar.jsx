@@ -129,18 +129,15 @@ const Navbar = () => {
                   {dropdown && (
                     <div className="absolute top-full -right-10 mt-2 w-48 bg-white rounded-lg shadow-lg">
                       <ul className="py-2">
-                        <Link
-                          to={'/student-profile'}
-                          className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white"
-                        >
-                          Profile
-                        </Link>
-                        <li className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white">
-                          Settings
-                        </li>
-                        <li className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white">
-                          Privacy
-                        </li>
+                        {user.Role !== 'owner' && user.Role !== 'admin' && (
+                          <Link
+                            to={'/student-profile'}
+                            className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white"
+                          >
+                            Profile
+                          </Link>
+                        )}
+
                         <li>
                           <button
                             className="cursor-pointer block w-full text-left px-4 py-2 text-gray-800 hover:bg-[#EF4444] hover:text-white"

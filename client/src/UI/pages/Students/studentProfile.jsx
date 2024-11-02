@@ -19,12 +19,6 @@ const StudentProfile = () => {
             <div className="lg:w-3/4 md:w-2/3 md:px-3 mt-6">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 <div className="mt-6">
-                  <h5 className="text-lg font-semibold mb-4">Introduction</h5>
-                  <p className="text-gray-700">
-                    {user.introduction || 'No introduction provided.'}
-                  </p>
-                </div>
-                <div className="mt-6">
                   <h5 className="text-lg font-semibold mb-4">Details</h5>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -39,20 +33,19 @@ const StudentProfile = () => {
                       </h6>
                       <p className="text-gray-700">{user.Email || 'N/A'}</p>
                     </div>
-                    <div>
-                      <h6 className="text-md font-extrabold text-gray-600">
-                        Date of Birth
-                      </h6>
-                      <p className="text-gray-700">{user.dob || 'N/A'}</p>
-                    </div>
-                    <div>
-                      <h6 className="text-md font-extrabold text-gray-600">
-                        University
-                      </h6>
-                      <p className="text-gray-700">
-                        {user.University || 'N/A'}
-                      </p>
-                    </div>
+
+                    {user.Role === 'student' && (
+                      <>
+                        <div>
+                          <h6 className="text-md font-extrabold text-gray-600">
+                            University
+                          </h6>
+                          <p className="text-gray-700">
+                            {user.University || 'N/A'}
+                          </p>
+                        </div>
+                      </>
+                    )}
                     <div>
                       <h6 className="text-md font-extrabold text-gray-600">
                         Account Status

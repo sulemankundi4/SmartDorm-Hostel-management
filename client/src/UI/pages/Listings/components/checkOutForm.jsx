@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCreateSingleBedBookingMutation } from '../../../../Redux/api/paymentApis';
 import toast from 'react-hot-toast';
 import alerts from '../../../../utils/alerts';
+import { useCheckExistingBookingsMutation } from '../../../../Redux/api/singleRoomBookingsApis';
 
 const CheckoutForm = ({ hostelId, amount, ownerId }) => {
   const { user } = useSelector((state) => state.userReducer);
@@ -21,7 +22,7 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
   const { confirmAlert, basicAlert } = alerts();
 
   const [singleRoomBooking] = useCreateSingleBedBookingMutation();
-
+  const [checkExistingBooking] = useCheckExistingBookingsMutation();
   const submitHandler = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) return;
@@ -36,8 +37,25 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
       StudentName: user?._id,
     };
 
+    const { StudentName, CheckInDate } = bookingData;
+
+    const CheckOutDate = new Date(bookingData.CheckInDate);
+    CheckOutDate.setMonth(CheckOutDate.getMonth() + 1);
+
     if (result.isConfirmed) {
       setIsProcessing(true);
+
+      // Validate booking before processing payment
+      const { data: validationData, error: validationError } =
+        await checkExistingBooking({
+          bookingData: { StudentName, CheckOutDate },
+        });
+
+      if (validationError) {
+        setIsProcessing(false);
+        navigate('/');
+        return toast.error(validationError.data.message);
+      }
 
       const { paymentIntent, error } = await stripe.confirmPayment({
         elements,

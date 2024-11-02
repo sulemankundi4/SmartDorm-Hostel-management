@@ -55,6 +55,10 @@ const StudentBookings = () => {
                             {booking.HostelName.HostelAddress}
                           </p>
                           <p className="text-black dark:text-gray-300">
+                            <span className="font-bold">Booking Id:</span>{' '}
+                            {booking._id}
+                          </p>
+                          <p className="text-black dark:text-gray-300">
                             <span className="font-bold">Hostel Owner:</span>{' '}
                             {booking.HostelOwnerName.Name} (
                             {booking.HostelOwnerName.Email})
@@ -79,8 +83,8 @@ const StudentBookings = () => {
                             Status: {booking.Status}
                           </p>
                           <p className="text-black dark:text-gray-300 mb-4">
-                            <span className="font-bold">Amount:</span> $
-                            {booking.Amount}
+                            <span className="font-bold">Amount:</span>
+                            {booking.Amount} PKR
                           </p>
                         </div>
                       ))}

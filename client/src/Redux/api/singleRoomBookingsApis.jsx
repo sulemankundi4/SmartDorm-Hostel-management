@@ -22,6 +22,14 @@ export const singleRoomBookingsApis = createApi({
       }),
       invalidatesTags: ['SingleRoomBookings'],
     }),
+    checkExistingBookings: builder.mutation({
+      query: ({ bookingData }) => ({
+        url: 'check-existing-booking',
+        method: 'POST',
+        body: { bookingData },
+      }),
+      invalidatesTags: ['SingleRoomBookings'],
+    }),
     getCommunityStats: builder.query({
       query: ({ hostelId }) => ({
         url: `get-community-stats?hostelId=${hostelId}`,
@@ -35,4 +43,5 @@ export const {
   useGetBookingsQuery,
   useVerifyBookingMutation,
   useGetCommunityStatsQuery,
+  useCheckExistingBookingsMutation,
 } = singleRoomBookingsApis;

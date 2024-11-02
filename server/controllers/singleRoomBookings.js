@@ -1,6 +1,7 @@
 const { tryCatch, errorHandler } = require("../utils/features");
 const SingleBedBooking = require("../models/singleBedBooking");
 const { default: mongoose } = require("mongoose");
+const Booking = require("../models/singleBedBooking");
 
 const getSingleRoomBookingsOfOwner = tryCatch(async (req, res, next) => {
   const { userId, isStudent } = req.query;
@@ -82,4 +83,22 @@ const getCommunityPageStatsUniversity = tryCatch(async (req, res, next) => {
   res.status(200).json({ success: true, data: bookings });
 });
 
-module.exports = { getSingleRoomBookingsOfOwner, verifySingleRoomBooking, getCommunityPageStatsUniversity };
+const validateExistingBooking = tryCatch(async (req, res, next) => {
+  const { StudentName, CheckInDate, CheckOutDate } = req.body;
+
+  const existingBooking = await Booking.find({
+    StudentName,
+    $or: [{ CheckInDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckOutDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckInDate: { $lte: CheckInDate }, CheckOutDate: { $gte: CheckOutDate } }],
+  });
+
+  if (existingBooking) {
+    return next(new errorHandler("You already have a booking within these dates", 400));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Booking is valid",
+  });
+});
+
+module.exports = { getSingleRoomBookingsOfOwner, validateExistingBooking, verifySingleRoomBooking, getCommunityPageStatsUniversity };

@@ -36,6 +36,8 @@ import StudentBookings from './UI/pages/Students/studentBookings';
 import StudentReviews from './UI/pages/Students/components/studentReviews';
 import ForgotPassword from './UI/pages/forgotPassword';
 import ResetPassword from './UI/pages/resetPassword';
+import PaymentMethod from './Admin/pages/Payments/PaymentMethod';
+import AddPaymentMethod from './Admin/pages/Payments/AddPaymentMethod';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -281,6 +283,8 @@ function App() {
           <Route path="/myListings/new" element={<AddNewListing />} />
           <Route path="/manage/all" element={<ListingsTable />} />
           <Route path="/listing/edit/:id" element={<EditListing />} />
+          <Route path="/manage/payments" element={<PaymentMethod />} />
+          <Route path="/manage/payments/new" element={<AddPaymentMethod />} />
         </Route>
       </Routes>
 
