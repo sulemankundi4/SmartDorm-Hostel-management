@@ -36,6 +36,13 @@ export const singleRoomBookingsApis = createApi({
         method: 'GET',
       }),
     }),
+    getAllBookings: builder.query({
+      query: ({ id }) => ({
+        url: `all-bookings?id=${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['SingleRoomBookings'],
+    }),
   }),
 });
 
@@ -44,4 +51,5 @@ export const {
   useVerifyBookingMutation,
   useGetCommunityStatsQuery,
   useCheckExistingBookingsMutation,
+  useGetAllBookingsQuery,
 } = singleRoomBookingsApis;

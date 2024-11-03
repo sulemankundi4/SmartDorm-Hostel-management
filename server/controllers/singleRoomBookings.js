@@ -101,4 +101,9 @@ const validateExistingBooking = tryCatch(async (req, res, next) => {
   });
 });
 
-module.exports = { getSingleRoomBookingsOfOwner, validateExistingBooking, verifySingleRoomBooking, getCommunityPageStatsUniversity };
+const getAllBookings = tryCatch(async (req, res, next) => {
+  const bookings = await SingleBedBooking.find().populate("StudentName", "Name Email University").populate("HostelName", "HostelName HostelAddress").populate("HostelOwnerName", "Name Email");
+
+  res.status(200).json({ success: true, bookings });
+});
+module.exports = { getSingleRoomBookingsOfOwner, validateExistingBooking, verifySingleRoomBooking, getCommunityPageStatsUniversity, getAllBookings };

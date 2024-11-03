@@ -41,8 +41,22 @@ const getPaymentMethods = tryCatch(async (req, res, next) => {
     data: paymentMethods,
   });
 });
+const getPaymentDetails = tryCatch(async (req, res, next) => {
+  const bookings = await SingleBedBooking.find();
 
+  const totalPayment = bookings.reduce((acc, booking) => acc + booking.Amount, 0);
+  const adminCommission = totalPayment * 0.1;
+
+  res.status(200).json({
+    success: true,
+    data: {
+      totalPayment,
+      adminCommission,
+    },
+  });
+});
 module.exports = {
   addPaymentMethod,
   getPaymentMethods,
+  getPaymentDetails,
 };

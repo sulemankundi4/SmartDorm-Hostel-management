@@ -20,8 +20,17 @@ export const paymentMethodApis = createApi({
         method: 'GET',
       }),
     }),
+    getPaymentDetails: builder.query({
+      query: ({ id }) => ({
+        url: `details/id=${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useAddPaymentMethodMutation, useGetPaymentMethodsQuery } =
-  paymentMethodApis;
+export const {
+  useAddPaymentMethodMutation,
+  useGetPaymentMethodsQuery,
+  useGetPaymentDetailsQuery,
+} = paymentMethodApis;
