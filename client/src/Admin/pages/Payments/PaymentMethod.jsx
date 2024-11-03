@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import DefaultLayout from './../../layout/DefaultLayout';
-// import { useAddPaymentMethodMutation } from '../../Redux/api/paymentApis';
-import { FaRegBuilding } from 'react-icons/fa6';
+import { FaRegBuilding, FaCreditCard } from 'react-icons/fa6';
 import { IoLocationOutline } from 'react-icons/io5';
 import { MdAdd } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { BsChevronBarRight, BsChevronRight } from 'react-icons/bs';
-
+import { useGetPaymentMethodsQuery } from '../../../Redux/api/paymentMethodApis';
 const PaymentMethod = () => {
   const { user } = useSelector((s) => s.userReducer);
   const [cardNumber, setCardNumber] = useState('');
@@ -19,36 +18,11 @@ const PaymentMethod = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // const [addPaymentMethod] = useAddPaymentMethodMutation();
+  const { data: paymentMethodsData, isLoading } = useGetPaymentMethodsQuery({
+    userId: user._id,
+  });
 
-  const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // try {
-    //   const response = await addPaymentMethod({
-    //     cardNumber,
-    //     expiryDate,
-    //     cvv,
-    //     cardType,
-    //     userName,
-    //   });
-    //   if (response.error) {
-    //     return toast.error(response.error.data.message);
-    //   }
-    //   toast.success('Payment method added successfully');
-    //   setPaymentMethods([
-    //     ...paymentMethods,
-    //     { cardNumber, expiryDate, cardType, userName },
-    //   ]);
-    //   setCardNumber('');
-    //   setExpiryDate('');
-    //   setCvv('');
-    //   setCardType('');
-    //   setUserName('');
-    //   setIsModalOpen(false);
-    // } catch (e) {
-    //   toast.error('Something went wrong');
-    // }
-  };
+  console.log(paymentMethodsData);
 
   return (
     <>
@@ -78,27 +52,31 @@ const PaymentMethod = () => {
               </Link>
             </div>
           </div>
-          <div
-            className={`flex items-center bg-white dark:border-strokedark dark:bg-boxdark shadow-lg rounded-xl p-6  $`}
-          >
-            <div className="flex-grow">
-              <div className="flex items-center mb-4">
-                <FaRegBuilding
-                  size={26}
-                  className="mr-2 text-black dark:text-white"
-                />
-                <div className="flex items-center">afsadfsadfsdaf</div>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Link
-                to={``}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-600 transition-all duration-200"
-              >
-                See Summary
-                <BsChevronRight size={18} />
-              </Link>
-            </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : (
+              paymentMethodsData?.data?.map((method) => (
+                <div
+                  key={method._id}
+                  className="flex items-center bg-white dark:border-strokedark dark:bg-boxdark shadow-lg rounded-xl p-4"
+                >
+                  <div className="flex-grow">
+                    <div className="flex items-center mb-2 mt-2">
+                      <FaCreditCard
+                        size={26}
+                        className="mr-2 text-black dark:text-white"
+                      />
+                      <div className="flex items-center">
+                        {method.cardType} ending in{' '}
+                        {method.cardNumber.slice(-4)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </DefaultLayout>
       </div>
