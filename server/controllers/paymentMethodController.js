@@ -105,8 +105,9 @@ const getOwnerTotalPayment = tryCatch(async (req, res, next) => {
   }
 
   const bookings = await Bookings.find({ HostelOwnerName: ownerId });
+  const unpaidBookings = bookings.filter((booking) => !booking.IsPaidToOwner);
 
-  let totalPayment = bookings.reduce((acc, booking) => acc + booking.Amount, 0);
+  let totalPayment = unpaidBookings.reduce((acc, booking) => acc + booking.Amount, 0);
   let adminCommision = totalPayment * 0.1;
 
   totalPayment -= adminCommision;
@@ -115,27 +116,6 @@ const getOwnerTotalPayment = tryCatch(async (req, res, next) => {
     data: {
       totalPayment,
     },
-  });
-});
-
-const sendPaymentToOwner = tryCatch(async (req, res, next) => {
-  const { ownerId, amount } = req.body;
-
-  if (!ownerId || !amount) {
-    return next(new errorHandler("Please provide all required fields", 400));
-  }
-
-  // Deduct the amount from admin balance (assuming admin balance is stored somewhere)
-  // For simplicity, let's assume admin balance is stored in a variable
-  let adminBalance = 10000; // Example balance
-  adminBalance -= amount;
-
-  // Logic to send payment to the owner (e.g., using a payment gateway)
-
-  res.status(200).json({
-    success: true,
-    message: "Payment sent successfully",
-    adminBalance,
   });
 });
 
@@ -168,7 +148,6 @@ module.exports = {
   getPaymentDetails,
   getHostelOwners,
   getOwnerCardDetails,
-  sendPaymentToOwner,
   getOwnerTotalPayment,
   getOwnerPaymentDetails,
 };

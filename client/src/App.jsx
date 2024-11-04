@@ -40,6 +40,7 @@ import PaymentMethod from './Admin/pages/Payments/PaymentMethod';
 import AddPaymentMethod from './Admin/pages/Payments/AddPaymentMethod';
 import AllBookings from './Admin/pages/Bookings/AllBookings';
 import ManagePayments from './Admin/pages/Payments/ManagePayments';
+import ManagePaymentsOwner from './Admin/pages/Payments/ManagePaymentsOwner';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -287,8 +288,15 @@ function App() {
           <Route path="/myListings/new" element={<AddNewListing />} />
           <Route path="/manage/all" element={<ListingsTable />} />
           <Route path="/listing/edit/:id" element={<EditListing />} />
-          <Route path="/manage/payments" element={<PaymentMethod />} />
-          <Route path="/manage/payments/new" element={<AddPaymentMethod />} />
+          <Route path="/manage/payment/methods" element={<PaymentMethod />} />
+          <Route
+            path="/manage/payment/methods/new"
+            element={<AddPaymentMethod />}
+          />
+          <Route
+            path="/manage/payments/owner"
+            element={<ManagePaymentsOwner />}
+          />
         </Route>
       </Routes>
 

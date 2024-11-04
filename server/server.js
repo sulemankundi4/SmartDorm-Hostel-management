@@ -14,6 +14,7 @@ const paymentRouter = require("./routes/payment");
 const singleRoomBookings = require("./routes/singleRoomBooking");
 const hostelReviews = require("./routes/reviews");
 const paymentMethodRoutes = require("./routes/paymentMethods");
+const transactionRoutes = require("./routes/transactions");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/api/v1/payments", paymentRouter);
 app.use("/api/v1/single-room-booking", singleRoomBookings);
 app.use("/api/v1/reviews", hostelReviews);
 app.use("/api/v1/payment-method", paymentMethodRoutes);
+app.use("/api/v1/transactions", transactionRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running at port ${port}`);

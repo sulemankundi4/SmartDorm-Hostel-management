@@ -10,7 +10,6 @@ router.get("/details", adminOnly, getPaymentDetails);
 router.get("/owners", adminOnly, getHostelOwners);
 router.get("/owner-card-details", adminOnly, getOwnerCardDetails);
 router.get("/owner-total-payment", adminOnly, getOwnerTotalPayment);
-router.post("/send-payment", adminOnly, sendPaymentToOwner);
 router.get("/owner-expected-payment", getOwnerPaymentDetails);
 
 module.exports = router;

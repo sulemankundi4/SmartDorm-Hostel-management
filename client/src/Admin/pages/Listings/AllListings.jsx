@@ -65,8 +65,6 @@ const AllListings = () => {
                 </h6>
               </div>
             </div>
-            {/* Hi Muhammad!
-This is where you can manage all your listings. */}
             {listingData.length > 0
               ? listingData.map((lisitng, key) => {
                   return (

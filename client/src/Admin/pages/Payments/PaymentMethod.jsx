@@ -44,7 +44,7 @@ const PaymentMethod = () => {
             </div>
             <div className="w-full md:w-1/2 flex justify-end">
               <Link
-                to={'/manage/payments/new'}
+                to={'/manage/payment/methods/new'}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white cursor-pointer bg-red-500 hover:bg-red-600 transition-all duration-200"
               >
                 <MdAdd size={24} />
