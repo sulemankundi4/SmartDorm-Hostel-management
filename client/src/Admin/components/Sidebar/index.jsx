@@ -269,6 +269,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   </NavLink>
                 )}
               </li>
+              <li>
+                {user?.Role === 'admin' && (
+                  <NavLink
+                    to="/manage/payments"
+                    className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                      pathname.includes('all-users') &&
+                      'bg-graydark dark:bg-meta-4'
+                    }`}
+                  >
+                    <MdPayment />
+                    Send Payments
+                  </NavLink>
+                )}
+              </li>
             </ul>
           </div>
         </nav>

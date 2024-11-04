@@ -42,6 +42,11 @@ const singleBedBookingSchema = mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+
+    IsPaidToOwner: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timeStamps: true,

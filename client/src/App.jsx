@@ -39,6 +39,7 @@ import ResetPassword from './UI/pages/resetPassword';
 import PaymentMethod from './Admin/pages/Payments/PaymentMethod';
 import AddPaymentMethod from './Admin/pages/Payments/AddPaymentMethod';
 import AllBookings from './Admin/pages/Bookings/AllBookings';
+import ManagePayments from './Admin/pages/Payments/ManagePayments';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -257,6 +258,7 @@ function App() {
             path="/verifyListingDetails/:listingId"
             element={<VerifyListingDetails />}
           />
+          <Route path="/manage/payments" element={<ManagePayments />} />
           <Route path="/manage-users" element={<AllUsers />} />
           <Route path="/all/bookings" element={<AllBookings />} />
           <Route path="/all-tickets" element={<AllTickets />} />
