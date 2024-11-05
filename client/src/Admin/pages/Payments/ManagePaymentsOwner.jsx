@@ -8,11 +8,14 @@ import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import Loader from '../../common/Loader';
 import alerts from '../../../utils/alerts';
-import { useGetOwnerPaymentsQuery } from '../../../Redux/api/transactionApis';
+import {
+  useGetOwnerPaymentsQuery,
+  useVerifyPaymentMutation,
+} from '../../../Redux/api/transactionApis';
 
 const ManagePaymentsOwner = () => {
   const { user } = useSelector((s) => s.userReducer);
-  //   const [verifyPayment] = useVerifyPaymentMutation({ id: user._id });
+  const [verifyPayment] = useVerifyPaymentMutation();
   const { confirmAlert, basicAlert } = alerts();
 
   const { data, isLoading, error } = useGetOwnerPaymentsQuery({
@@ -25,8 +28,6 @@ const ManagePaymentsOwner = () => {
     return toast.error('An error occurred while fetching your payments');
   }
 
-  console.log(paymentData);
-
   const verifyHandler = async (transactionId) => {
     const result = await confirmAlert(
       'Are you sure want to verify this payment?',
@@ -36,6 +37,7 @@ const ManagePaymentsOwner = () => {
         ownerId: user._id,
         transactionId,
       });
+
       if (res.data) {
         basicAlert('Verified!', 'This payment has been verified.', 'success');
       } else if (res.error) {

@@ -23,10 +23,10 @@ export const singleRoomBookingsApis = createApi({
       invalidatesTags: ['SingleRoomBookings'],
     }),
     checkExistingBookings: builder.mutation({
-      query: ({ bookingData }) => ({
+      query: ({ StudentName, CheckInDate, CheckOutDate }) => ({
         url: 'check-existing-booking',
         method: 'POST',
-        body: { bookingData },
+        body: { StudentName, CheckInDate, CheckOutDate },
       }),
       invalidatesTags: ['SingleRoomBookings'],
     }),

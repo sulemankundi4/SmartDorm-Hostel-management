@@ -52,15 +52,17 @@ const Navbar = () => {
   return (
     <div className="absolute top-1 sm:top-13 z-9 w-[100%] ">
       <nav className="w-full flex justify-between px-[2rem] md:px-[4rem]  h-[5rem] text-lg font-bold items-center bg-white drop-shadow-2">
-        <div>
+        <Link to={'/'}>
           <img className="h-60 w-55" src={logo} alt="Logo" />
-        </div>
+        </Link>
         <ul
           className="bg-white w-[70%] xsm:w-[60%] md:w-[35rem] gap-2 flex xl:flex-row flex-col xl:static absolute top-0 left-0 min-h-dvh xl:w-[42rem] items-start xl:items-center px-8 xl:px-0 xl:py-0 xl:min-h-1 py-8 xl:justify-between text-black duration-300 text-center"
           style={{ left: isOpen ? '0' : '-100%' }}
         >
           <div className="flex w-100 justify-between xl:hidden  items-center">
-            <img className="h-30 w-55" src={logo} alt="Logo" />
+            <Link to={'/'}>
+              <img className="h-30 w-55" src={logo} alt="Logo" />
+            </Link>
             <li className="mb-1 flex xl:hidden justify-end text-2xl">
               <IoClose onClick={() => setIsOpen(false)} />
             </li>

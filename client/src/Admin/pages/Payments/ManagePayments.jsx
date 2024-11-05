@@ -9,9 +9,11 @@ import {
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useCreateTransactionMutation } from '../../../Redux/api/transactionApis';
+import { useNavigate } from 'react-router-dom';
 
 const ManagePayments = () => {
   const { user } = useSelector((s) => s.userReducer);
+  const navigate = useNavigate();
   const [selectedOwner, setSelectedOwner] = useState('');
   const [transactionId, setTransactionId] = useState('');
 
@@ -73,10 +75,10 @@ const ManagePayments = () => {
         return toast.error(response.error.data.message);
       }
 
+      navigate('/manage/payments');
       toast.success('Payment sent successfully');
       setTransactionId('');
     } catch (e) {
-      console.log(e);
       toast.error('Something went wrong');
     }
   };

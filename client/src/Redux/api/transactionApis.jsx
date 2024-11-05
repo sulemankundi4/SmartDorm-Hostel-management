@@ -6,6 +6,7 @@ export const transactionApis = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${server}/api/v1/transactions/`,
   }),
+  tagTypes: ['Transaction'],
   endpoints: (builder) => ({
     createTransaction: builder.mutation({
       query: ({ ownerName, amount, transactionId }) => ({
@@ -13,12 +14,14 @@ export const transactionApis = createApi({
         method: 'POST',
         body: { ownerName, amount, transactionId },
       }),
+      invalidatesTags: ['Transaction'],
     }),
     getOwnerPayments: builder.query({
       query: ({ ownerId }) => ({
         url: `owner-payments?ownerId=${ownerId}`,
         method: 'GET',
       }),
+      providesTags: ['Transaction'],
     }),
     verifyPayment: builder.mutation({
       query: ({ transactionId, ownerId }) => ({
@@ -26,6 +29,7 @@ export const transactionApis = createApi({
         method: 'POST',
         body: { transactionId, ownerId },
       }),
+      invalidatesTags: ['Transaction'],
     }),
   }),
 });

@@ -2,6 +2,7 @@ const { tryCatch, errorHandler } = require("../utils/features");
 const PaymentMethod = require("../models/paymentMethod");
 const Bookings = require("../models/singleBedBooking");
 const User = require("../models/user");
+const Transaction = require("../models/transactions");
 
 const addPaymentMethod = tryCatch(async (req, res, next) => {
   const { cardNumber, cardType, userName, userId } = req.body;
@@ -12,8 +13,8 @@ const addPaymentMethod = tryCatch(async (req, res, next) => {
 
   const GetPaymentMethods = await PaymentMethod.find({ userId });
 
-  if (GetPaymentMethods.length > 1) {
-    return next(new errorHandler("You can only have two payment method", 400));
+  if (GetPaymentMethods.length > 0) {
+    return next(new errorHandler("You can only have one payment method", 400));
   }
 
   const newPaymentMethod = await PaymentMethod.create({
@@ -134,10 +135,17 @@ const getOwnerPaymentDetails = tryCatch(async (req, res, next) => {
   expectedPaymentToCome -= expectedPaymentToCome * 0.1;
   expectedPaymentToCome = (expectedPaymentToCome / 1000).toFixed(1);
 
+  const totalTransactions = await Transaction.find({ ownerName: ownerId });
+  console.log(totalTransactions);
+  let totalPaymentRecived = totalTransactions.reduce((acc, payment) => acc + payment.amount, 0);
+
+  totalPaymentRecived = (totalPaymentRecived / 1000).toFixed(1);
+
   res.status(200).json({
     success: true,
     data: {
       expectedPaymentToCome,
+      totalPaymentRecived,
     },
   });
 });

@@ -32,11 +32,11 @@ const AddPaymentMethod = () => {
       }
 
       if (response.error) {
-        navigate('/manage/payments');
+        navigate('/manage/payments/owner');
         return toast.error(response.error.data.message);
       }
 
-      navigate('/manage/payments');
+      navigate('/manage/payments/owner');
 
       toast.success('Payment method added successfully');
       setCardNumber('');

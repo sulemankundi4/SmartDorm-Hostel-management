@@ -29,14 +29,13 @@ const Dashboard = () => {
     data: ownerData,
     isLoading: ownerLoading,
     isError: ownerError,
+    error,
   } = useGetOwnerExpectedPaymentQuery(
     {
       ownerId: user._id,
     },
     { skip: isAdmin },
   );
-
-  console.log(ownerData);
 
   if (isError || ownerError) {
     return toast.error('An error occurred while fetching payment details');
@@ -189,7 +188,10 @@ const Dashboard = () => {
                   />
                 </svg>
               </CardDataStats>
-              <CardDataStats title="Total Payment Recived" total="0">
+              <CardDataStats
+                title="Total Payment Recived"
+                total={ownerData?.data?.totalPaymentRecived + `k`}
+              >
                 <svg
                   className="fill-primary dark:fill-white"
                   width="22"

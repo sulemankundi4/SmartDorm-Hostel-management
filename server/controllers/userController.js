@@ -103,6 +103,10 @@ const login = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Incorrect email or password", 401));
   }
 
+  if (user.AccountStatus === false) {
+    return next(new errorHandler("Account is inactive", 401));
+  }
+
   createAndSendToken(user, 200, res, false, "user");
 });
 
@@ -183,7 +187,7 @@ const resendVerificationMail = tryCatch(async (req, res, next) => {
 });
 
 const getAllUsers = tryCatch(async (req, res, next) => {
-  const users = await Users.find({ AccountStatus: true });
+  const users = await Users.find();
 
   res.status(200).json({
     status: "success",
@@ -199,6 +203,7 @@ const deletUser = tryCatch(async (req, res, next) => {
   if (!user) {
     return next(new errorHandler("User not found", 404));
   }
+
   user.AccountStatus = false;
   await user.save({ validateBeforeSave: false });
 

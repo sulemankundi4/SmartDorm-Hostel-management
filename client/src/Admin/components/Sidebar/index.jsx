@@ -170,8 +170,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   </NavLink>
                 )}
               </li>
-              <li>
-                {user?.Role === 'owner' && (
+              {user?.Role === 'owner' && (
+                <li>
                   <NavLink
                     to="/myListings"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -182,10 +182,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <AiTwotonePropertySafety />
                     My Listings
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'admin' && (
+                </li>
+              )}
+              {user?.Role === 'admin' && (
+                <li>
                   <NavLink
                     to="/allListings"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -196,10 +196,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <AiTwotonePropertySafety />
                     All Listings
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'admin' && (
+                </li>
+              )}
+              {user?.Role === 'admin' && (
+                <li>
                   <NavLink
                     to="/all-tickets"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -210,10 +210,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <AiTwotonePropertySafety />
                     Tickets
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'owner' && (
+                </li>
+              )}
+              {user?.Role === 'owner' && (
+                <li>
                   <NavLink
                     to="/manage/all"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -224,10 +224,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <MdTrackChanges />
                     Manage Listings
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'owner' && (
+                </li>
+              )}
+              {user?.Role === 'owner' && (
+                <li>
                   <NavLink
                     to="/single/bookings"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -238,11 +238,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <MdPayment />
                     Single Room Bookings
                   </NavLink>
-                )}
-              </li>
+                </li>
+              )}
 
-              <li>
-                {user?.Role === 'owner' && (
+              {user?.Role === 'owner' && (
+                <li>
                   <NavLink
                     to="/manage/payment/methods"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -253,10 +253,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <MdPayment />
                     Payments Methods
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'owner' && (
+                </li>
+              )}
+              {user?.Role === 'owner' && (
+                <li>
                   <NavLink
                     to="/manage/payments/owner"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -267,10 +267,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <MdPayment />
                     Manage Payments
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'admin' && (
+                </li>
+              )}
+              {user?.Role === 'admin' && (
+                <li>
                   <NavLink
                     to="/all/bookings"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -281,10 +281,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <MdPayment />
                     All Bookings
                   </NavLink>
-                )}
-              </li>
-              <li>
-                {user?.Role === 'admin' && (
+                </li>
+              )}
+              {user?.Role === 'admin' && (
+                <li>
                   <NavLink
                     to="/manage/payments"
                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
@@ -295,8 +295,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <MdPayment />
                     Send Payments
                   </NavLink>
-                )}
-              </li>
+                </li>
+              )}
             </ul>
           </div>
         </nav>

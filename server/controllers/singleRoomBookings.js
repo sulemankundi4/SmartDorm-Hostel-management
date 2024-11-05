@@ -12,7 +12,7 @@ const getSingleRoomBookingsOfOwner = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Hostel Owner ID is required", 400));
   }
 
-  const bookings = await SingleBedBooking.find(isStudentBool ? { StudentName: userId } : { HostelOwnerName: userId })
+  const bookings = await SingleBedBooking.find(isStudentBool ? { StudentName: userId } : { HostelOwnerName: userId, Status: "confirmed" })
     .populate("StudentName", "Name Email University")
     .populate("HostelName", "HostelName HostelAddress")
     .populate("HostelOwnerName", "Name Email");
@@ -91,7 +91,7 @@ const validateExistingBooking = tryCatch(async (req, res, next) => {
     $or: [{ CheckInDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckOutDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckInDate: { $lte: CheckInDate }, CheckOutDate: { $gte: CheckOutDate } }],
   });
 
-  if (existingBooking) {
+  if (existingBooking.length > 0) {
     return next(new errorHandler("You already have a booking within these dates", 400));
   }
 

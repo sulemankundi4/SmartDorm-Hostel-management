@@ -15,6 +15,7 @@ const Hero = () => {
   const [formData, setFormData] = useState({});
   const [selectedLocationCoords, setSelectedLocationCoords] = useState([]);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
 
   const [searchNearByHostels] = useSearchListingWithinRangeMutation();
 
@@ -26,9 +27,11 @@ const Hero = () => {
     getItemProps,
     highlightedIndex,
     selectedItem,
+    reset,
   } = useCombobox({
     items: locations,
     onInputValueChange: async ({ inputValue }) => {
+      if (!inputValue) return;
       const response = await axios.get(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
           inputValue,
@@ -53,12 +56,19 @@ const Hero = () => {
     onSelectedItemChange: ({ selectedItem }) => {
       setSelectedLocationCoords(selectedItem);
       setIsLocationSelected(true);
+      setIsEditingLocation(false);
     },
     itemToString: (item) => (item ? item[0] : ''),
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleEditLocation = () => {
+    setIsEditingLocation(true);
+    setIsLocationSelected(false);
+    reset(); // Reset the combobox state
   };
 
   const handleSubmit = async (e) => {
@@ -146,7 +156,6 @@ const Hero = () => {
                 href="#!"
                 className="lightbox lg:h-24 h-20 lg:w-24 w-20 rounded-full shadow-lg dark:shadow-gray-800 inline-flex items-center justify-center bg-white hover:bg-red-500 text-red-500 hover:text-white duration-500 ease-in-out mx-auto"
               >
-                {/* <i className="mdi mdi-play inline-flex items-center justify-center text-3xl"></i> */}
                 <FaCirclePlay size={'96px'} />
               </a>
             </div>
@@ -176,9 +185,24 @@ const Hero = () => {
                       type="text"
                       className="w-full py-2 px-3 ps-10 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-[rgb(243,244,246)] dark:border-gray-800 focus:ring-0"
                       placeholder="Search"
-                      disabled={isLocationSelected}
-                      {...getInputProps()}
+                      disabled={isLocationSelected && !isEditingLocation}
+                      {...getInputProps({
+                        onFocus: () => {
+                          if (isEditingLocation) {
+                            reset();
+                          }
+                        },
+                      })}
                     />
+                    {isLocationSelected && !isEditingLocation && (
+                      <button
+                        type="button"
+                        onClick={handleEditLocation}
+                        className="absolute right-2 top-2 text-blue-500"
+                      >
+                        Edit
+                      </button>
+                    )}
 
                     {locations.length > 0 && (
                       <ul
@@ -189,27 +213,27 @@ const Hero = () => {
                       >
                         {isOpen &&
                           locations.map((item, index) => (
-                            <>
-                              <div className="flex gap-2">
-                                <li>
-                                  <IoLocation />
-                                </li>
-                                <li
-                                  className={`cursor-pointer ${
-                                    highlightedIndex === index
-                                      ? 'bg-blue-500 text-white'
-                                      : ''
-                                  }`}
-                                  key={`${item[0]}${index}`}
-                                  {...getItemProps({
-                                    item,
-                                    index,
-                                  })}
-                                >
-                                  {item[0]}
-                                </li>
-                              </div>
-                            </>
+                            <div
+                              className="flex gap-2"
+                              key={`${item[0]}${index}`}
+                            >
+                              <li>
+                                <IoLocation />
+                              </li>
+                              <li
+                                className={`cursor-pointer ${
+                                  highlightedIndex === index
+                                    ? 'bg-blue-500 text-white'
+                                    : ''
+                                }`}
+                                {...getItemProps({
+                                  item,
+                                  index,
+                                })}
+                              >
+                                {item[0]}
+                              </li>
+                            </div>
                           ))}
                       </ul>
                     )}

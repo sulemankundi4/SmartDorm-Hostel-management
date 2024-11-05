@@ -48,7 +48,9 @@ const CheckoutForm = ({ hostelId, amount, ownerId }) => {
       // Validate booking before processing payment
       const { data: validationData, error: validationError } =
         await checkExistingBooking({
-          bookingData: { StudentName, CheckOutDate },
+          StudentName,
+          CheckInDate,
+          CheckOutDate,
         });
 
       if (validationError) {

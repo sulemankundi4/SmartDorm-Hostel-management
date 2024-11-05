@@ -5,6 +5,7 @@ export const server = import.meta.env.VITE_SERVER_URL;
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: `${server}/api/v1/users/` }),
+  tagTypes: ['User'],
   endpoints: (builder) => ({
     logIn: builder.mutation({
       query: ({ body }) => ({
@@ -39,6 +40,7 @@ export const userApi = createApi({
     getAllUsers: builder.query({
       query: (id) => `allUsers?id=${id}`,
       method: 'GET',
+      providesTags: ['User'],
     }),
     forgotPassword: builder.mutation({
       query: ({ Email }) => ({
@@ -71,6 +73,13 @@ export const userApi = createApi({
         credentials: 'include',
         body: { Email, Name, uid, isOwner },
       }),
+    }),
+    deleteUser: builder.mutation({
+      query: ({ id, userId }) => ({
+        url: `${id}?id=${userId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
     }),
   }),
 });
@@ -108,4 +117,5 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useValidatePasswordResetTokenMutation,
+  useDeleteUserMutation,
 } = userApi;
