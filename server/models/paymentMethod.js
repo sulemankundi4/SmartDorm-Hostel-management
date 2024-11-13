@@ -3,12 +3,11 @@ const mongoose = require("mongoose");
 const paymentMethodSchema = new mongoose.Schema({
   cardNumber: {
     type: String,
-    required: [true, "Please provide a card number"],
+    required: [true, "Please provide a account number"],
   },
-
-  cardType: {
+  bankName: {
     type: String,
-    required: [true, "Please provide a card type"],
+    required: [true, "Please provide a Bank Name"],
   },
   userName: {
     type: String,

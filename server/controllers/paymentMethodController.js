@@ -5,9 +5,9 @@ const User = require("../models/user");
 const Transaction = require("../models/transactions");
 
 const addPaymentMethod = tryCatch(async (req, res, next) => {
-  const { cardNumber, cardType, userName, userId } = req.body;
+  const { cardNumber, bankName, userName, userId } = req.body;
 
-  if (!cardNumber || !cardType || !userName || !userId) {
+  if (!cardNumber || !bankName || !userName || !userId) {
     return next(new errorHandler("Please provide all required fields", 400));
   }
 
@@ -19,7 +19,7 @@ const addPaymentMethod = tryCatch(async (req, res, next) => {
 
   const newPaymentMethod = await PaymentMethod.create({
     cardNumber,
-    cardType,
+    bankName,
     userName,
     userId,
   });

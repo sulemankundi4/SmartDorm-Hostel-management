@@ -8,6 +8,7 @@ import mapboxgl from 'mapbox-gl';
 import AllowLocation from './components/AllowLocation';
 import Cookies from 'js-cookie';
 import { useSearchListingWithinRangeMutation } from '../../../Redux/api/hostelApis';
+import SearchForm from '../Listings/components/SearchForm';
 
 const SearchListings = () => {
   const [value, setValue] = useState(50);
@@ -76,6 +77,21 @@ const SearchListings = () => {
     new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map.current);
   });
 
+  const handleSearchSubmit = async (formData) => {
+    const { selectedLocationCoords, distance } = formData;
+
+    try {
+      const res = await searchNearByHostels({
+        Lat: selectedLocationCoords[1][1],
+        Lon: selectedLocationCoords[1][0],
+        distance,
+      });
+      if (res.data) {
+        setNearByHostelsData(res.data.payLoad);
+      }
+    } catch (e) {}
+  };
+
   return (
     <>
       <TopBar />
@@ -96,163 +112,6 @@ const SearchListings = () => {
               <div className="grid md:grid-cols-12 grid-cols-1 gap-6">
                 <div className="lg:col-span-4 md:col-span-5 md:order-2 order-1">
                   <div className="p-4 rounded-md shadow dark:shadow-gray-700 sticky top-3">
-                    <div>
-                      <h5 className="text-lg font-medium">Price Filter</h5>
-
-                      <div className=" mt-3">
-                        <span className="flex justify-between pb-2">
-                          <span>
-                            <label htmlFor="" className="text-lg">
-                              $
-                            </label>
-                            <input
-                              type="number"
-                              className="text-slate-400"
-                              value={value}
-                              min="0"
-                              max="200"
-                              onChange={(e) => setValue(e.target.value)}
-                            />
-                          </span>
-                        </span>
-                        <input
-                          className="w-full"
-                          value={value}
-                          min="0"
-                          max="200"
-                          type="range"
-                          onChange={(e) => setValue(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mt-6">
-                      <h5 className="text-lg font-medium">Reviews</h5>
-
-                      <div className="mt-3">
-                        <div className="flex items-center mb-0">
-                          <input
-                            className="form-checkbox rounded border-gray-100 dark:border-gray-800 text-red-500 focus:border-red-300 focus:ring focus:ring-offset-0 focus:ring-red-500/20 focus:ring-opacity-50 me-2"
-                            type="checkbox"
-                            value=""
-                            id="5star"
-                          />
-                          <label
-                            className="form-checkbox-label text-slate-400"
-                            htmlFor="5star"
-                          >
-                            <ul className="flex gap-1 font-medium list-none">
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                            </ul>
-                          </label>
-                        </div>
-                        <div className="flex items-center mb-0">
-                          <input
-                            className="form-checkbox rounded border-gray-100 dark:border-gray-800 text-red-500 focus:border-red-300 focus:ring focus:ring-offset-0 focus:ring-red-500/20 focus:ring-opacity-50 me-2"
-                            type="checkbox"
-                            value=""
-                            id="4star"
-                          />
-                          <label
-                            className="form-checkbox-label text-slate-400"
-                            htmlFor="4star"
-                          >
-                            <ul className="flex gap-1 font-medium list-none">
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                            </ul>
-                          </label>
-                        </div>
-                        <div className="flex items-center mb-0">
-                          <input
-                            className="form-checkbox rounded border-gray-100 dark:border-gray-800 text-red-500 focus:border-red-300 focus:ring focus:ring-offset-0 focus:ring-red-500/20 focus:ring-opacity-50 me-2"
-                            type="checkbox"
-                            value=""
-                            id="3star"
-                          />
-                          <label
-                            className="form-checkbox-label text-slate-400"
-                            htmlFor="3star"
-                          >
-                            <ul className="flex gap-1 font-medium list-none">
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                            </ul>
-                          </label>
-                        </div>
-                        <div className="flex items-center mb-0">
-                          <input
-                            className="form-checkbox rounded border-gray-100 dark:border-gray-800 text-red-500 focus:border-red-300 focus:ring focus:ring-offset-0 focus:ring-red-500/20 focus:ring-opacity-50 me-2"
-                            type="checkbox"
-                            value=""
-                            id="2star"
-                          />
-                          <label
-                            className="form-checkbox-label text-slate-400"
-                            htmlFor="2star"
-                          >
-                            <ul className="flex gap-1 font-medium list-none">
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                            </ul>
-                          </label>
-                        </div>
-                        <div className="flex items-center mb-0">
-                          <input
-                            className="form-checkbox rounded border-gray-100 dark:border-gray-800 text-red-500 focus:border-red-300 focus:ring focus:ring-offset-0 focus:ring-red-500/20 focus:ring-opacity-50 me-2"
-                            type="checkbox"
-                            value=""
-                            id="1star"
-                          />
-                          <label
-                            className="form-checkbox-label text-slate-400"
-                            htmlFor="1star"
-                          >
-                            <ul className="flex gap-1 font-medium list-none">
-                              <li className="inline">
-                                <BsStarFill className=" text-amber-400 align-middle" />
-                              </li>
-                            </ul>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
                     <div className="mt-6">
                       <h5 className="text-lg font-medium">Location Map</h5>
 
@@ -282,6 +141,17 @@ const SearchListings = () => {
             Try increasing the radius to find more hostels or change your
             Location
           </p>
+          <div className="mt-6">
+            <SearchForm
+              initialFormData={{
+                startDate: location.state?.startDate,
+                endDate: location.state?.endDate,
+                distance: location.state?.distance,
+                selectedLocationCoords: null,
+              }}
+              onSubmit={handleSearchSubmit}
+            />
+          </div>
         </div>
       )}
     </>

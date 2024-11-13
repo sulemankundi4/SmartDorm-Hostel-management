@@ -8,10 +8,10 @@ export const paymentMethodApis = createApi({
   }),
   endpoints: (builder) => ({
     addPaymentMethod: builder.mutation({
-      query: ({ cardNumber, cardType, userName, userId }) => ({
+      query: ({ cardNumber, bankName, userName, userId }) => ({
         url: 'add',
         method: 'POST',
-        body: { cardNumber, cardType, userId, userName },
+        body: { cardNumber, bankName, userId, userName },
       }),
     }),
     getPaymentMethods: builder.query({

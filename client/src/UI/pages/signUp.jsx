@@ -82,8 +82,6 @@ const SignUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  console.log(selectedUniversity);
-  console.log(registrationType);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -165,6 +163,7 @@ const SignUp = () => {
   const handleRegistrationTypeChange = (e) => {
     setRegistrationType(e.target.value);
   };
+
   return (
     <div className="rounded-sm min-h-screen flex items-center sm:justify-center px-[1rem] sm:px-0   bg-white">
       <div className="flex flex-wrap items-center py-10 w-full">

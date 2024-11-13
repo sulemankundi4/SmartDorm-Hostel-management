@@ -115,7 +115,7 @@ const ManagePayments = () => {
               <>
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Card Number
+                    Bank Account Number
                   </label>
                   <input
                     type="text"
@@ -123,6 +123,17 @@ const ManagePayments = () => {
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     readOnly
                   />
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Bank Name
+                    </label>
+                    <input
+                      type="text"
+                      value={cardDetailsData?.data?.bankName}
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      readOnly
+                    />
+                  </div>
                   <div className="mb-4">
                     <label className="block text-gray-700 font-medium mb-2">
                       Name On Card
