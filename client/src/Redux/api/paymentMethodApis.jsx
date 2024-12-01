@@ -6,19 +6,36 @@ export const paymentMethodApis = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${server}/api/v1/payment-method/`,
   }),
+  tagTypes: ['PaymentMethod'],
   endpoints: (builder) => ({
     addPaymentMethod: builder.mutation({
-      query: ({ cardNumber, bankName, userName, userId }) => ({
+      query: ({
+        cardNumber,
+        bankName,
+        userName,
+        methodType,
+        phoneNumber,
+        userId,
+      }) => ({
         url: 'add',
         method: 'POST',
-        body: { cardNumber, bankName, userId, userName },
+        body: {
+          cardNumber,
+          bankName,
+          methodType,
+          phoneNumber,
+          userId,
+          userName,
+        },
       }),
+      invalidatesTags: ['PaymentMethod'],
     }),
     getPaymentMethods: builder.query({
       query: ({ userId }) => ({
         url: `?userId=${userId}`,
         method: 'GET',
       }),
+      providesTags: ['PaymentMethod'],
     }),
     getPaymentDetails: builder.query({
       query: ({ id }) => ({

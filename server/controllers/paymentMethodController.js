@@ -5,21 +5,27 @@ const User = require("../models/user");
 const Transaction = require("../models/transactions");
 
 const addPaymentMethod = tryCatch(async (req, res, next) => {
-  const { cardNumber, bankName, userName, userId } = req.body;
+  const { methodType, cardNumber, phoneNumber, bankName, userName, userId } = req.body;
 
-  if (!cardNumber || !bankName || !userName || !userId) {
+  console.log(req.body);
+
+  if (!methodType || !userName || !userId) {
     return next(new errorHandler("Please provide all required fields", 400));
   }
 
-  const GetPaymentMethods = await PaymentMethod.find({ userId });
+  if (methodType === "Bank" && (!cardNumber || !bankName)) {
+    return next(new errorHandler("Please provide card number and bank name", 400));
+  }
 
-  if (GetPaymentMethods.length > 0) {
-    return next(new errorHandler("You can only have one payment method", 400));
+  if ((methodType === "Easypaisa" || methodType === "JazzCash") && !phoneNumber) {
+    return next(new errorHandler("Please provide phone number", 400));
   }
 
   const newPaymentMethod = await PaymentMethod.create({
+    methodType,
     cardNumber,
     bankName,
+    phoneNumber,
     userName,
     userId,
   });
@@ -90,7 +96,7 @@ const getOwnerCardDetails = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide an owner ID", 400));
   }
 
-  const cardDetails = await PaymentMethod.findOne({ userId: ownerId });
+  const cardDetails = await PaymentMethod.find({ userId: ownerId });
 
   res.status(200).json({
     success: true,

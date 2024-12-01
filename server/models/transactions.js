@@ -23,6 +23,10 @@ const transactionSchema = mongoose.Schema(
       type: String,
       required: [true, "Transaction ID is required"],
     },
+    transactionImage: {
+      type: String,
+      required: [true, "Transaction image is required"],
+    },
   },
   {
     timestamps: true,

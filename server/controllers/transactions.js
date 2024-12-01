@@ -3,9 +3,9 @@ const Transaction = require("../models/transactions");
 const Bookings = require("../models/singleBedBooking");
 
 const createTransaction = tryCatch(async (req, res, next) => {
-  const { ownerName, amount, transactionId } = req.body;
+  const { ownerName, amount, transactionId, transactionImage } = req.body;
 
-  if (!ownerName || !amount || !transactionId) {
+  if (!ownerName || !amount || !transactionId || !transactionImage) {
     return next(new errorHandler("Please provide all required fields", 400));
   }
 
@@ -20,6 +20,7 @@ const createTransaction = tryCatch(async (req, res, next) => {
     ownerName,
     amount,
     transactionId,
+    transactionImage,
   });
 
   res.status(201).json({

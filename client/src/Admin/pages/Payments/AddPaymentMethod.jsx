@@ -7,8 +7,10 @@ import { useNavigate } from 'react-router-dom';
 
 const AddPaymentMethod = () => {
   const navigate = useNavigate();
+  const [methodType, setMethodType] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [bankName, setBankName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [userName, setUserName] = useState('');
   const [addPaymentMethod] = useAddPaymentMethodMutation();
   const { user } = useSelector((s) => s.userReducer);
@@ -17,18 +19,38 @@ const AddPaymentMethod = () => {
     e.preventDefault();
     try {
       const response = await addPaymentMethod({
+        methodType,
         cardNumber,
         bankName,
+        phoneNumber,
         userName,
         userId: user?._id,
       });
 
-      if (!cardNumber || !bankName || !userName) {
+      if (!methodType || !userName) {
         return toast.error('Please provide all required fields');
       }
 
-      if (cardNumber.length !== 13) {
+      if (methodType === 'Bank' && (!cardNumber || !bankName)) {
+        return toast.error('Please provide card number and bank name');
+      }
+
+      if (
+        (methodType === 'Easypaisa' || methodType === 'JazzCash') &&
+        !phoneNumber
+      ) {
+        return toast.error('Please provide phone number');
+      }
+
+      if (methodType === 'Bank' && cardNumber.length !== 13) {
         return toast.error('Card number must be 13 digits long');
+      }
+
+      if (
+        (methodType === 'Easypaisa' || methodType === 'JazzCash') &&
+        phoneNumber.length !== 11
+      ) {
+        return toast.error('Phone number must be 11 digits long');
       }
 
       if (response.error) {
@@ -52,40 +74,75 @@ const AddPaymentMethod = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 font-medium mb-2">
-                Account Number
+                Payment Method Type
               </label>
-              <input
-                type="text"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
+              <select
+                value={methodType}
+                onChange={(e) => setMethodType(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                placeholder="Enter card number"
                 required
-              />
+              >
+                <option value="">Select Payment Method</option>
+                <option value="Bank">Bank</option>
+                <option value="Easypaisa">Easypaisa</option>
+                <option value="JazzCash">JazzCash</option>
+              </select>
             </div>
+            {methodType === 'Bank' && (
+              <>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Account Number
+                  </label>
+                  <input
+                    type="text"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    placeholder="Enter card number"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Bank Name
+                  </label>
+                  <input
+                    type="text"
+                    value={bankName}
+                    onChange={(e) => setBankName(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    placeholder="Enter bank name"
+                    required
+                  />
+                </div>
+              </>
+            )}
+            {(methodType === 'Easypaisa' || methodType === 'JazzCash') && (
+              <div className="mb-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  placeholder="Enter phone number"
+                  required
+                />
+              </div>
+            )}
             <div className="mb-4">
               <label className="block text-gray-700 font-medium mb-2">
-                Bank Name
-              </label>
-              <input
-                type="text"
-                value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                placeholder="Enter bank name"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">
-                Name on Card
+                Name on Account
               </label>
               <input
                 type="text"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                placeholder="Enter name on card"
+                placeholder="Enter name on account"
                 required
               />
             </div>
