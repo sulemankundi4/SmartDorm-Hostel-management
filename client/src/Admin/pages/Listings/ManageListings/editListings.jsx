@@ -24,9 +24,7 @@ const EditListing = () => {
   const [listingData, setListingData] = useState({});
   const [deleteImages, setDeleteImages] = useState([]);
   const [newImages, setNewImages] = useState({});
-  const [totalRooms, setTotalRooms] = useState(0);
-  const [singleBedRooms, setSingleBedRooms] = useState(0);
-  const [doubleBedRooms, setDoubleBedRooms] = useState(0);
+
   const [FoodMenu, setFoodMenu] = useState([
     {
       Day: 'Monday',
@@ -74,6 +72,7 @@ const EditListing = () => {
 
   const { basicAlert } = alerts();
   const allowedFileTypes = ['jpg', 'jpeg', 'png'];
+
   const { uploadFile } = MediaManagment();
   const [progress, setProgress] = useState(0);
   const [loading, setUploading] = useState(false);
@@ -126,30 +125,6 @@ const EditListing = () => {
 
     const { name, value, type, files } = e.target;
 
-    let numericSingleBedRooms = singleBedRooms;
-    let numericTotalRooms = totalRooms;
-
-    if (name === 'TotalRooms') {
-      numericTotalRooms = Number(value);
-      setTotalRooms(numericTotalRooms);
-    }
-
-    if (name === 'SingleBedRooms') {
-      numericSingleBedRooms = Number(value);
-      setSingleBedRooms(numericSingleBedRooms);
-    }
-
-    if (numericSingleBedRooms > numericTotalRooms) {
-      setSingleBedRooms('');
-      setDoubleBedRooms(numericTotalRooms);
-      return basicAlert(
-        'Validation Error',
-        'Single Bed Rooms should be less than or equal to Total Rooms',
-        'error',
-      );
-    }
-    setDoubleBedRooms(numericTotalRooms - numericSingleBedRooms);
-
     if (e.target.type === 'file') {
       const files = Array.from(e.target.files);
 
@@ -183,8 +158,6 @@ const EditListing = () => {
   if (newImages?.HostelImages)
     newImagesUploaded = Array.from(newImages?.HostelImages);
 
-  console.log(listingData);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -200,6 +173,7 @@ const EditListing = () => {
         FoodMenu,
         HostelRent,
         HostelAddressProof,
+        SingleBedRooms,
       } = listingData;
 
       if (
@@ -210,10 +184,8 @@ const EditListing = () => {
         !HostelAddress ||
         !HostelDescription ||
         !HostelImages.length ||
-        totalRooms === 0 ||
-        singleBedRooms === 0 ||
+        SingleBedRooms === 0 ||
         !HostelRent ||
-        doubleBedRooms === 0 ||
         !Currency ||
         !FoodMenu.length ||
         !HostelAddressProof
@@ -376,23 +348,6 @@ const EditListing = () => {
                     </div>
                     <div className="w-full xl:w-1/2">
                       <label className="mb-2.5 block text-black dark:text-white">
-                        Total Rooms
-                      </label>
-                      <input
-                        name="TotalRooms"
-                        type="number"
-                        min={0}
-                        value={totalRooms}
-                        onChange={handleChange}
-                        placeholder="Number of Total Rooms"
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                    <div className="w-full xl:w-1/2">
-                      <label className="mb-2.5 block text-black dark:text-white">
                         Sinle Bed Rooms <span className="text-meta-1">*</span>
                       </label>
                       <input
@@ -400,24 +355,9 @@ const EditListing = () => {
                         name="SingleBedRooms"
                         type="number"
                         min={0}
-                        value={singleBedRooms}
-                        disabled={!totalRooms}
+                        value={listingData.SingleBedRooms}
                         placeholder="Enter the number of Single Bed Rooms"
                         onChange={handleChange}
-                      />
-                    </div>
-                    <div className="w-full xl:w-1/2">
-                      <label className="mb-2.5 block text-black dark:text-white">
-                        Double Bed Rooms
-                      </label>
-                      <input
-                        name="DoubleBedRooms"
-                        type="number"
-                        readOnly
-                        value={doubleBedRooms}
-                        onChange={handleChange}
-                        placeholder="Number of double bed rooms."
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     </div>
                   </div>

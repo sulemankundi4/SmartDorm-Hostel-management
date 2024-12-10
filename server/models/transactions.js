@@ -6,7 +6,7 @@ const transactionSchema = mongoose.Schema(
   {
     ownerName: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
       required: [true, "Owner Name is required"],
     },
     amount: {
@@ -18,7 +18,6 @@ const transactionSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
     transactionId: {
       type: String,
       required: [true, "Transaction ID is required"],

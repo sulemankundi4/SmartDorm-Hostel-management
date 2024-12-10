@@ -9,10 +9,10 @@ export const transactionApis = createApi({
   tagTypes: ['Transaction'],
   endpoints: (builder) => ({
     createTransaction: builder.mutation({
-      query: ({ ownerName, amount, transactionId }) => ({
+      query: ({ ownerName, amount, transactionImage, transactionId }) => ({
         url: 'create',
         method: 'POST',
-        body: { ownerName, amount, transactionId },
+        body: { ownerName, amount, transactionImage, transactionId },
       }),
       invalidatesTags: ['Transaction'],
     }),
@@ -31,6 +31,12 @@ export const transactionApis = createApi({
       }),
       invalidatesTags: ['Transaction'],
     }),
+    getAllTransactions: builder.query({
+      query: () => ({
+        url: 'all-transactions',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -38,4 +44,5 @@ export const {
   useCreateTransactionMutation,
   useGetOwnerPaymentsQuery,
   useVerifyPaymentMutation,
+  useGetAllTransactionsQuery,
 } = transactionApis;

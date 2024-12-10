@@ -41,10 +41,16 @@ const SearchListings = () => {
     location.state?.nearHostelsData || [],
   );
 
-  let longitude = location.state?.coordinates[1][0] || currentUserLongitude;
-  let latitude = location.state?.coordinates[1][1] || currentUserLatitude;
-  let locationName = location.state?.coordinates[0] || 'Your Location';
-  let distance = location.state?.distance || 100;
+  const [longitude, setLongitude] = useState(
+    location.state?.coordinates[1][0] || currentUserLongitude,
+  );
+  const [latitude, setLatitude] = useState(
+    location.state?.coordinates[1][1] || currentUserLatitude,
+  );
+  const [locationName, setLocationName] = useState(
+    location.state?.coordinates[0] || 'Your Location',
+  );
+  const [distance, setDistance] = useState(location.state?.distance || 100);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +65,6 @@ const SearchListings = () => {
         }
       } catch (e) {}
     };
-
     if (location.state === null) {
       fetchData();
     }
@@ -79,6 +84,7 @@ const SearchListings = () => {
 
   const handleSearchSubmit = async (formData) => {
     const { selectedLocationCoords, distance } = formData;
+    console.log(formData);
 
     try {
       const res = await searchNearByHostels({
@@ -88,6 +94,10 @@ const SearchListings = () => {
       });
       if (res.data) {
         setNearByHostelsData(res.data.payLoad);
+        setLongitude(selectedLocationCoords[1][0]);
+        setLatitude(selectedLocationCoords[1][1]);
+        setLocationName(selectedLocationCoords[0]);
+        setDistance(distance);
       }
     } catch (e) {}
   };

@@ -25,13 +25,32 @@ const AddNewListing = () => {
 
   const navigate = useNavigate();
 
-  const [totalRooms, setTotalRooms] = useState(0);
-  const [singleBedRooms, setSingleBedRooms] = useState(0);
-  const [doubleBedRooms, setDoubleBedRooms] = useState(0);
   const { user } = useSelector((s) => s.userReducer);
   const ListingOwner = user._id;
 
   const [listingData, setListingData] = useState({});
+
+  const [seaterRooms, setSeaterRooms] = useState({
+    twoSeater: false,
+    threeSeater: false,
+    fourSeater: false,
+  });
+
+  const [seaterRoomCounts, setSeaterRoomCounts] = useState({
+    twoSeaterCount: 0,
+    threeSeaterCount: 0,
+    fourSeaterCount: 0,
+  });
+
+  const handleSeaterRoomChange = (e) => {
+    const { name, checked } = e.target;
+    setSeaterRooms({ ...seaterRooms, [name]: checked });
+  };
+
+  const handleSeaterRoomCountChange = (e) => {
+    const { name, value } = e.target;
+    setSeaterRoomCounts({ ...seaterRoomCounts, [name]: value });
+  };
 
   const [FoodMenu, setFoodMenu] = useState([
     {
@@ -102,6 +121,7 @@ const AddNewListing = () => {
     HostelDescription,
     HostelCity,
     PropertyType,
+    SingleBedRooms,
   } = listingData;
 
   //////////////////LOCATION CHANGE///////////////////////
@@ -159,30 +179,6 @@ const AddNewListing = () => {
 
     const { name, value, type, files } = e.target;
 
-    let numericSingleBedRooms = singleBedRooms;
-    let numericTotalRooms = totalRooms;
-
-    if (name === 'TotalRooms') {
-      numericTotalRooms = Number(value);
-      setTotalRooms(numericTotalRooms);
-    }
-
-    if (name === 'SingleBedRooms') {
-      numericSingleBedRooms = Number(value);
-      setSingleBedRooms(numericSingleBedRooms);
-    }
-
-    if (numericSingleBedRooms > numericTotalRooms) {
-      setSingleBedRooms('');
-      setDoubleBedRooms(numericTotalRooms);
-      return basicAlert(
-        'Validation Error',
-        'Single Bed Rooms should be less than or equal to Total Rooms',
-        'error',
-      );
-    }
-    setDoubleBedRooms(numericTotalRooms - numericSingleBedRooms);
-
     if (type === 'file') {
       setListingData({ ...listingData, [name]: files });
     } else {
@@ -219,9 +215,7 @@ const AddNewListing = () => {
       !HostelImages ||
       !HostelDescription ||
       !HostelAddressProof ||
-      !singleBedRooms ||
-      !doubleBedRooms ||
-      !totalRooms ||
+      !SingleBedRooms ||
       selectedlocation.length === 0
     ) {
       return basicAlert(
@@ -290,9 +284,6 @@ const AddNewListing = () => {
           ...listingData,
           ListingOwner,
           FoodMenu,
-          TotalRooms: totalRooms,
-          SingleBedRooms: singleBedRooms,
-          DoubleBedRooms: doubleBedRooms,
           Facilities: hostelFacilities,
           Location: {
             type: 'Point',
@@ -301,6 +292,46 @@ const AddNewListing = () => {
           SelectedLocationName: selectedlocation[0],
           HostelAddressProof: adressVerifyImg,
           HostelImages: downloadURLs,
+          SeaterRooms: [
+            seaterRooms.twoSeater &&
+              Array.from(
+                { length: seaterRoomCounts.twoSeaterCount },
+                (_, i) => ({
+                  seaterType: 2,
+                  rooms: Array.from({ length: 2 }, (_, j) => ({
+                    roomNumber: `2Seater-${i + 1}-${j + 1}`,
+                    isAvailable: true,
+                    bookingId: null,
+                  })),
+                }),
+              ),
+            seaterRooms.threeSeater &&
+              Array.from(
+                { length: seaterRoomCounts.threeSeaterCount },
+                (_, i) => ({
+                  seaterType: 3,
+                  rooms: Array.from({ length: 3 }, (_, j) => ({
+                    roomNumber: `3Seater-${i + 1}-${j + 1}`,
+                    isAvailable: true,
+                    bookingId: null,
+                  })),
+                }),
+              ),
+            seaterRooms.fourSeater &&
+              Array.from(
+                { length: seaterRoomCounts.fourSeaterCount },
+                (_, i) => ({
+                  seaterType: 4,
+                  rooms: Array.from({ length: 4 }, (_, j) => ({
+                    roomNumber: `4Seater-${i + 1}-${j + 1}`,
+                    isAvailable: true,
+                    bookingId: null,
+                  })),
+                }),
+              ),
+          ]
+            .flat()
+            .filter(Boolean),
         },
       });
       setUploading(false);
@@ -312,6 +343,7 @@ const AddNewListing = () => {
 
       basicAlert('Oops...', `${res.error.message}', 'error' `);
     } catch (e) {
+      console.log(e);
       basicAlert('Oops...', 'Something went wrong...', 'error');
     }
   };
@@ -383,49 +415,90 @@ const AddNewListing = () => {
                       </div>
                       <div className="w-full xl:w-1/2">
                         <label className="mb-2.5 block text-black dark:text-white">
-                          Total Rooms
-                        </label>
-                        <input
-                          name="TotalRooms"
-                          type="number"
-                          min={0}
-                          onChange={handleChange}
-                          placeholder="Number of beds"
-                          className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                        />
-                      </div>
-                    </div>
-                    <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                      <div className="w-full xl:w-1/2">
-                        <label className="mb-2.5 block text-black dark:text-white">
-                          Sinle Bed Rooms <span className="text-meta-1">*</span>
+                          Single Bed Rooms{' '}
+                          <span className="text-meta-1">*</span>
                         </label>
                         <input
                           className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                           name="SingleBedRooms"
                           type="number"
-                          min={0}
-                          value={singleBedRooms}
-                          disabled={!totalRooms}
+                          min={1}
+                          value={SingleBedRooms}
                           placeholder="Enter the number of Single Bed Rooms"
                           onChange={handleChange}
                         />
                       </div>
+                    </div>
+
+                    <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                       <div className="w-full xl:w-1/2">
                         <label className="mb-2.5 block text-black dark:text-white">
-                          Double Bed Rooms
+                          2 Seater Room
                         </label>
                         <input
-                          name="DoubleBedRooms"
-                          type="number"
-                          readOnly
-                          value={doubleBedRooms}
-                          onChange={handleChange}
-                          placeholder="Number of double bed rooms."
-                          className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          type="checkbox"
+                          name="twoSeater"
+                          onChange={handleSeaterRoomChange}
+                          className="h-5 w-5 text-primary border-gray-300 rounded focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary"
                         />
+                        {seaterRooms.twoSeater && (
+                          <input
+                            type="number"
+                            name="twoSeaterCount"
+                            min={1}
+                            value={seaterRoomCounts.twoSeaterCount}
+                            onChange={handleSeaterRoomCountChange}
+                            placeholder="Enter count for 2 Seater Rooms"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          />
+                        )}
+                      </div>
+                      <div className="w-full xl:w-1/2">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          3 Seater Room
+                        </label>
+                        <input
+                          type="checkbox"
+                          name="threeSeater"
+                          onChange={handleSeaterRoomChange}
+                          className="h-5 w-5 text-primary border-gray-300 rounded focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary"
+                        />
+                        {seaterRooms.threeSeater && (
+                          <input
+                            type="number"
+                            name="threeSeaterCount"
+                            min={1}
+                            value={seaterRoomCounts.threeSeaterCount}
+                            onChange={handleSeaterRoomCountChange}
+                            placeholder="Enter count for 3 Seater Rooms"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          />
+                        )}
+                      </div>
+                      <div className="w-full xl:w-1/2">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          4 Seater Room
+                        </label>
+                        <input
+                          type="checkbox"
+                          name="fourSeater"
+                          onChange={handleSeaterRoomChange}
+                          className="h-5 w-5 text-primary border-gray-300 rounded focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary"
+                        />
+                        {seaterRooms.fourSeater && (
+                          <input
+                            type="number"
+                            name="fourSeaterCount"
+                            min={1}
+                            value={seaterRoomCounts.fourSeaterCount}
+                            onChange={handleSeaterRoomCountChange}
+                            placeholder="Enter count for 4 Seater Rooms"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                          />
+                        )}
                       </div>
                     </div>
+
                     <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                       <div className="w-full ">
                         <label className="mb-2.5 block text-black dark:text-white">

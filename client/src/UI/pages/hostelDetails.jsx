@@ -326,13 +326,18 @@ const HostelDetails = () => {
                         <div className="w-full md:w-1/2 p-4">
                           <div className="bg-white shadow-lg rounded-lg p-6 text-center">
                             <h3 className="text-xl text-black font-semibold mb-4">
-                              Book a Double Room
+                              Book a Seater Room
                             </h3>
                             <p className="text-gray-600 mb-4">
-                              Share a room with a friend or family member.
+                              Choose from 2-seater, 3-seater, or 4-seater rooms.
                             </p>
-                            <button className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300">
-                              Book Now
+                            <button
+                              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+                              onClick={() =>
+                                navigate(`/seaterRooms/${hostelData._id}`)
+                              }
+                            >
+                              Select Room
                             </button>
                           </div>
                         </div>

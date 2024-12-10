@@ -1,11 +1,14 @@
 const { tryCatch, errorHandler } = require("../utils/features");
 const Hostel = require("../models/hostel");
+const { v4: uuidv4 } = require("uuid");
 
 const createNewListing = tryCatch(async (req, res, next) => {
-  const { HostelName, HostelProvince, SelectedLocationName, TotalRooms, SingleBedRooms, DoubleBedRooms, Location, HostelDescription, HostelImages, FoodMenu, HostelCity, HostelAddress, PropertyType, Currency, HostelRent, HostelAddressProof, ListingOwner, Facilities } = req.body;
-  if (!HostelAddress || !HostelCity || !Location || !SelectedLocationName || !TotalRooms || !SingleBedRooms || !DoubleBedRooms || !HostelDescription || !HostelName || !FoodMenu || !HostelProvince || !Currency || !HostelImages || !HostelRent || !HostelAddressProof || !Facilities || !ListingOwner) {
+  const { HostelName, HostelProvince, SelectedLocationName, SingleBedRooms, SeaterRooms, Location, HostelDescription, HostelImages, FoodMenu, HostelCity, HostelAddress, PropertyType, Currency, HostelRent, HostelAddressProof, ListingOwner, Facilities } = req.body;
+  if (!HostelAddress || !HostelCity || !Location || !SelectedLocationName || !SingleBedRooms || !HostelDescription || !HostelName || !FoodMenu || !HostelProvince || !Currency || !HostelImages || !HostelRent || !HostelAddressProof || !Facilities || !ListingOwner) {
     return next(new errorHandler("Please fill in all the fields", 400));
   }
+
+  console.log(SeaterRooms);
 
   const newHostel = await Hostel.create({
     HostelName,
@@ -16,9 +19,8 @@ const createNewListing = tryCatch(async (req, res, next) => {
     SelectedLocationName,
     PropertyType,
     HostelAddressProof,
-    TotalRooms,
     SingleBedRooms,
-    DoubleBedRooms,
+    SeaterRooms: SeaterRooms || [],
     ListingOwner,
     HostelDescription,
     HostelRent,
@@ -33,7 +35,6 @@ const createNewListing = tryCatch(async (req, res, next) => {
     payLoad: newHostel,
   });
 });
-
 const updateListing = tryCatch(async (req, res, next) => {
   const updateHostel = await Hostel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,

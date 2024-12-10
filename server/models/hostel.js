@@ -1,5 +1,33 @@
 const mongoose = require("mongoose");
 
+const roomSchema = new mongoose.Schema({
+  roomNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
+  bookingId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Booking",
+    default: null,
+  },
+});
+
+const seaterRoomSchema = new mongoose.Schema({
+  seaterType: {
+    type: Number,
+    required: true,
+  },
+  rooms: {
+    type: [roomSchema],
+    default: [],
+  },
+});
+
 const hostelSchema = mongoose.Schema(
   {
     HostelName: {
@@ -46,17 +74,14 @@ const hostelSchema = mongoose.Schema(
       type: Number,
       required: [true, "Hostel Rent is required"],
     },
-    TotalRooms: {
-      type: Number,
-      required: [true, "Total Rooms are required"],
-    },
+
     SingleBedRooms: {
       type: Number,
       required: [true, "Single Bed Rooms are required"],
     },
-    DoubleBedRooms: {
-      type: Number,
-      required: [true, "Double Bed Rooms are required"],
+    SeaterRooms: {
+      type: [seaterRoomSchema],
+      default: [],
     },
     FoodMenu: [
       {

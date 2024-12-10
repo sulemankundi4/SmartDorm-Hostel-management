@@ -20,6 +20,7 @@ const ManagePayments = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { data: ownersData, isLoading: ownersLoading } =
     useGetHostelOwnersQuery({ id: user._id });
 
@@ -66,25 +67,27 @@ const ManagePayments = () => {
     setSelectedPaymentMethod(e.target.value);
   };
 
-  console.log(image);
-  console.log(image?.name);
-
   const { basicAlert } = alerts();
   const { uploadFile } = MediaManagment();
   const allowedFileTypes = ['jpg', 'jpeg', 'png'];
+  const [progress, setProgress] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (!transactionId) {
+        setLoading(false);
         return toast.error('Please enter transaction ID');
       }
       if (!image) {
+        setLoading(false);
         return toast.error('Please upload a transaction image');
       }
       const fileExtension = image.name.split('.').pop().toLowerCase();
 
       if (!allowedFileTypes.includes(fileExtension)) {
+        setLoading(false);
         return basicAlert(
           'Validation Error',
           `We only accept jpg, jpeg and png files! Invalid file: ${image.name}`,
@@ -94,6 +97,8 @@ const ManagePayments = () => {
 
       const snapshots = await uploadFile({
         files: [image], // Send the image as an array of one file
+        setUploading: setLoading,
+        setProgress,
       });
 
       const downloadURL = await getDownloadURL(snapshots[0].ref);
@@ -106,14 +111,19 @@ const ManagePayments = () => {
       });
 
       if (response.error) {
+        setLoading(false);
         return toast.error(response.error.data.message);
       }
 
-      navigate('/manage/payments');
+      navigate('/dashboard');
       toast.success('Payment sent successfully');
       setTransactionId('');
+      setImage(null);
     } catch (e) {
+      console.log(e);
       toast.error('Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -273,29 +283,44 @@ const ManagePayments = () => {
                 />
               </div>
             )}
-            <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+
             {ownerTotalPaymentData?.data?.totalPayment > 0 && (
-              <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Transaction ID
-                </label>
-                <input
-                  type="text"
-                  value={transactionId}
-                  onChange={(e) => setTransactionId(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  placeholder="Enter transaction ID"
-                  required
-                />
-              </div>
+              <>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Transaction ID
+                  </label>
+                  <input
+                    type="text"
+                    value={transactionId}
+                    onChange={(e) => setTransactionId(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    placeholder="Enter transaction ID"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Transaction Image
+                  </label>
+                  <input
+                    type="file"
+                    name="transactionImage"
+                    onChange={(e) => setImage(e.target.files[0])}
+                  />
+                </div>
+              </>
             )}
+
+            <label htmlFor=""></label>
 
             {ownerTotalPaymentData?.data?.totalPayment > 0 && (
               <button
                 type="submit"
                 className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
+                disabled={loading}
               >
-                Send Payment
+                {loading ? 'Processing...' : 'Send Payment'}
               </button>
             )}
           </form>

@@ -69,8 +69,23 @@ const verifyPayment = tryCatch(async (req, res, next) => {
   });
 });
 
+const getAllTransactions = tryCatch(async (req, res, next) => {
+  console.log("THis is co");
+  const transactions = await Transaction.find().populate("ownerName", "Name Email");
+
+  if (!transactions) {
+    return next(new errorHandler("No transactions found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    data: transactions,
+  });
+});
+
 module.exports = {
   createTransaction,
   getOwnerPayments,
   verifyPayment,
+  getAllTransactions,
 };

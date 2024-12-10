@@ -41,6 +41,8 @@ import AddPaymentMethod from './Admin/pages/Payments/AddPaymentMethod';
 import AllBookings from './Admin/pages/Bookings/AllBookings';
 import ManagePayments from './Admin/pages/Payments/ManagePayments';
 import ManagePaymentsOwner from './Admin/pages/Payments/ManagePaymentsOwner';
+import AllTransactions from './Admin/pages/Payments/AllTransactions';
+import SeaterRooms from './UI/pages/SeaterRooms/seaterRooms';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -244,6 +246,15 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/seaterRooms/:hostelId"
+          element={
+            <>
+              <PageTitle title="Seater Rooms | SmartDorm" />
+              <SeaterRooms />
+            </>
+          }
+        />
         {/* BELOW ROUTES FOR THE ADMIN */}
         <Route
           element={
@@ -260,6 +271,8 @@ function App() {
             element={<VerifyListingDetails />}
           />
           <Route path="/manage/payments" element={<ManagePayments />} />
+          <Route path="/all/transactions" element={<AllTransactions />} />
+
           <Route path="/manage-users" element={<AllUsers />} />
           <Route path="/all/bookings" element={<AllBookings />} />
           <Route path="/all-tickets" element={<AllTickets />} />
