@@ -43,6 +43,8 @@ import ManagePayments from './Admin/pages/Payments/ManagePayments';
 import ManagePaymentsOwner from './Admin/pages/Payments/ManagePaymentsOwner';
 import AllTransactions from './Admin/pages/Payments/AllTransactions';
 import SeaterRooms from './UI/pages/SeaterRooms/seaterRooms';
+import BookSeaterRoom from './UI/pages/SeaterRooms/bookSeaterRooms';
+import CheckOutMultiseater from './UI/pages/SeaterRooms/checkout';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -238,6 +240,15 @@ function App() {
           }
         />
         <Route
+          path="/pay/multiseater"
+          element={
+            <>
+              <PageTitle title="Search Listings | SmartDorm" />
+              <CheckOutMultiseater />
+            </>
+          }
+        />
+        <Route
           path="/hostelDetails/:hostelId"
           element={
             <>
@@ -252,6 +263,15 @@ function App() {
             <>
               <PageTitle title="Seater Rooms | SmartDorm" />
               <SeaterRooms />
+            </>
+          }
+        />
+        <Route
+          path="/bookRoom/:hostelId/:seaterType/:seaterNumber"
+          element={
+            <>
+              <PageTitle title="Seater Rooms | SmartDorm" />
+              <BookSeaterRoom />
             </>
           }
         />

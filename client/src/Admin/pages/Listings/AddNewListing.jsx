@@ -298,6 +298,7 @@ const AddNewListing = () => {
                 { length: seaterRoomCounts.twoSeaterCount },
                 (_, i) => ({
                   seaterType: 2,
+                  count: i + 1,
                   rooms: Array.from({ length: 2 }, (_, j) => ({
                     roomNumber: `2Seater-${i + 1}-${j + 1}`,
                     isAvailable: true,
@@ -310,6 +311,7 @@ const AddNewListing = () => {
                 { length: seaterRoomCounts.threeSeaterCount },
                 (_, i) => ({
                   seaterType: 3,
+                  count: i + 1,
                   rooms: Array.from({ length: 3 }, (_, j) => ({
                     roomNumber: `3Seater-${i + 1}-${j + 1}`,
                     isAvailable: true,
@@ -322,6 +324,7 @@ const AddNewListing = () => {
                 { length: seaterRoomCounts.fourSeaterCount },
                 (_, i) => ({
                   seaterType: 4,
+                  count: i + 1,
                   rooms: Array.from({ length: 4 }, (_, j) => ({
                     roomNumber: `4Seater-${i + 1}-${j + 1}`,
                     isAvailable: true,

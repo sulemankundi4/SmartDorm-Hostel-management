@@ -43,6 +43,13 @@ export const singleRoomBookingsApis = createApi({
       }),
       providesTags: ['SingleRoomBookings'],
     }),
+    getAllMultiseaterListings: builder.query({
+      query: ({ id }) => ({
+        url: `all-multiseater-bookings?id=${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['SingleRoomBookings'],
+    }),
   }),
 });
 
@@ -52,4 +59,5 @@ export const {
   useGetCommunityStatsQuery,
   useCheckExistingBookingsMutation,
   useGetAllBookingsQuery,
+  useGetAllMultiseaterListingsQuery,
 } = singleRoomBookingsApis;

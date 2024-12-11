@@ -2,6 +2,7 @@ const { tryCatch, errorHandler } = require("../utils/features");
 const SingleBedBooking = require("../models/singleBedBooking");
 const { default: mongoose } = require("mongoose");
 const Booking = require("../models/singleBedBooking");
+const MultiSeaterBooking = require("../models/multiseaterBooking");
 
 const getSingleRoomBookingsOfOwner = tryCatch(async (req, res, next) => {
   const { userId, isStudent } = req.query;
@@ -91,7 +92,12 @@ const validateExistingBooking = tryCatch(async (req, res, next) => {
     $or: [{ CheckInDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckOutDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckInDate: { $lte: CheckInDate }, CheckOutDate: { $gte: CheckOutDate } }],
   });
 
-  if (existingBooking.length > 0) {
+  const existingMultiseaterBooking = await MultiSeaterBooking.find({
+    StudentName,
+    $or: [{ CheckInDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckOutDate: { $lte: CheckOutDate, $gte: CheckInDate } }, { CheckInDate: { $lte: CheckInDate }, CheckOutDate: { $gte: CheckOutDate } }],
+  });
+
+  if (existingBooking.length > 0 || existingMultiseaterBooking.length > 0) {
     return next(new errorHandler("You already have a booking within these dates", 400));
   }
 
@@ -106,4 +112,11 @@ const getAllBookings = tryCatch(async (req, res, next) => {
 
   res.status(200).json({ success: true, bookings });
 });
-module.exports = { getSingleRoomBookingsOfOwner, validateExistingBooking, verifySingleRoomBooking, getCommunityPageStatsUniversity, getAllBookings };
+
+const getAllMultiseaterBookings = tryCatch(async (req, res, next) => {
+  const bookings = await MultiSeaterBooking.find().populate("StudentName", "Name Email University").populate("HostelName", "HostelName HostelAddress").populate("HostelOwnerName", "Name Email");
+
+  res.status(200).json({ success: true, bookings });
+});
+
+module.exports = { getSingleRoomBookingsOfOwner, getAllMultiseaterBookings, validateExistingBooking, verifySingleRoomBooking, getCommunityPageStatsUniversity, getAllBookings };

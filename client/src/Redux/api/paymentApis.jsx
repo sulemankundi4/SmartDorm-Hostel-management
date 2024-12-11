@@ -21,10 +21,26 @@ export const paymentApis = createApi({
         body,
       }),
     }),
+    createSeaterRoomBooking: builder.mutation({
+      query: ({ body }) => ({
+        url: 'create-seater-room-booking',
+        method: 'POST',
+        body,
+      }),
+    }),
+    getBookingDetails: builder.mutation({
+      query: ({ roomNumber }) => ({
+        url: 'booking-details',
+        method: 'POST',
+        body: { roomNumber },
+      }),
+    }),
   }),
 });
 
 export const {
   useCreatePaymentIntentMutation,
   useCreateSingleBedBookingMutation,
+  useCreateSeaterRoomBookingMutation,
+  useGetBookingDetailsMutation,
 } = paymentApis;
