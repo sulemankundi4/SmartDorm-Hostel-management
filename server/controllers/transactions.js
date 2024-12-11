@@ -70,7 +70,6 @@ const verifyPayment = tryCatch(async (req, res, next) => {
 });
 
 const getAllTransactions = tryCatch(async (req, res, next) => {
-  console.log("THis is co");
   const transactions = await Transaction.find().populate("ownerName", "Name Email");
 
   if (!transactions) {

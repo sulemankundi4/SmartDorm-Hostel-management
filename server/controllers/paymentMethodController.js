@@ -3,11 +3,10 @@ const PaymentMethod = require("../models/paymentMethod");
 const Bookings = require("../models/singleBedBooking");
 const User = require("../models/user");
 const Transaction = require("../models/transactions");
+const MultiSeaterBooking = require("../models/multiseaterBooking");
 
 const addPaymentMethod = tryCatch(async (req, res, next) => {
   const { methodType, cardNumber, phoneNumber, bankName, userName, userId } = req.body;
-
-  console.log(req.body);
 
   if (!methodType || !userName || !userId) {
     return next(new errorHandler("Please provide all required fields", 400));
@@ -52,11 +51,14 @@ const getPaymentMethods = tryCatch(async (req, res, next) => {
 });
 
 const getPaymentDetails = tryCatch(async (req, res, next) => {
-  const bookings = await Bookings.find();
-  const unpaidBookings = bookings.filter((booking) => !booking.IsPaidToOwner);
-  let totalBookings = bookings.length;
+  const singleRoomBookings = await Bookings.find();
+  const multiSeaterBookings = await MultiSeaterBooking.find();
 
-  let AllTimePayment = bookings.reduce((acc, booking) => acc + booking.Amount, 0);
+  const allBookings = [...singleRoomBookings, ...multiSeaterBookings];
+  const unpaidBookings = allBookings.filter((booking) => !booking.IsPaidToOwner);
+  let totalBookings = allBookings.length;
+
+  let AllTimePayment = allBookings.reduce((acc, booking) => acc + booking.Amount, 0);
   let AllTimeAdminCommission = AllTimePayment * 0.1;
 
   let unpaidPayment = unpaidBookings.reduce((acc, booking) => acc + booking.Amount, 0);
@@ -111,8 +113,11 @@ const getOwnerTotalPayment = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide an owner ID", 400));
   }
 
-  const bookings = await Bookings.find({ HostelOwnerName: ownerId });
-  const unpaidBookings = bookings.filter((booking) => !booking.IsPaidToOwner);
+  const singleRoomBookings = await Bookings.find({ HostelOwnerName: ownerId });
+  const multiSeaterBookings = await MultiSeaterBooking.find({ HostelOwnerName: ownerId });
+
+  const allBookings = [...singleRoomBookings, ...multiSeaterBookings];
+  const unpaidBookings = allBookings.filter((booking) => !booking.IsPaidToOwner);
 
   let totalPayment = unpaidBookings.reduce((acc, booking) => acc + booking.Amount, 0);
   let adminCommision = totalPayment * 0.1;

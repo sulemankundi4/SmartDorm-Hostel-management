@@ -58,9 +58,18 @@ const StudentReviews = () => {
     }
   };
 
-  const confirmedBookings = data?.bookings.filter(
-    (booking) => booking.Status === 'confirmed',
-  );
+  const confirmedBookings =
+    data?.bookings.filter((booking) => booking.Status === 'confirmed') || [];
+
+  const confirmedMultiseaterBookings =
+    data?.multiSeaterBookings.filter(
+      (booking) => booking.Status === 'confirmed',
+    ) || [];
+
+  const allConfirmedBookings = [
+    ...confirmedBookings,
+    ...confirmedMultiseaterBookings,
+  ];
 
   if (isError) {
     return toast.error('An error occurred while fetching your bookings');
@@ -81,7 +90,7 @@ const StudentReviews = () => {
                 </h5>
                 {isLoading ? (
                   <div>Loading...</div>
-                ) : confirmedBookings?.length === 0 ? (
+                ) : allConfirmedBookings?.length === 0 ? (
                   <div className="text-center text-xl font-bold text-red-500 dark:text-red-400">
                     No confirmed bookings found.
                   </div>
@@ -101,7 +110,7 @@ const StudentReviews = () => {
                         value={selectedHostel?._id || ''}
                         onChange={(e) =>
                           setSelectedHostel(
-                            confirmedBookings.find(
+                            allConfirmedBookings.find(
                               (booking) => booking._id === e.target.value,
                             ),
                           )
@@ -110,7 +119,7 @@ const StudentReviews = () => {
                         <option value="" disabled>
                           Select a hostel
                         </option>
-                        {confirmedBookings.map((booking) => (
+                        {allConfirmedBookings.map((booking) => (
                           <option key={booking._id} value={booking._id}>
                             {booking.HostelName.HostelName}
                           </option>

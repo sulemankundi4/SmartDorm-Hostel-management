@@ -46,7 +46,7 @@ const getReviewsOfHostel = tryCatch(async (req, res, next) => {
 
 const hasUserReviewedHostel = tryCatch(async (req, res, next) => {
   const { userId, hostelId } = req.query;
-
+  console.log(userId, hostelId);
   if (!userId || !hostelId) {
     return next(new errorHandler("Please provide both user ID and hostel ID", 400));
   }
