@@ -52,6 +52,8 @@ const ManagePaymentsOwner = () => {
     }
   };
 
+  console.log(paymentData);
+
   return (
     <DefaultLayout>
       {isLoading ? (
@@ -85,7 +87,12 @@ const ManagePaymentsOwner = () => {
                     <div className="flex-grow">
                       <div className="flex items-center mb-4">
                         <div className="flex items-center">
-                          <a className="text-lg font-semibold text-black underline dark:text-white mr-2">
+                          <a
+                            href={payment.transactionImage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-lg font-semibold text-black underline dark:text-white mr-2"
+                          >
                             {payment.transactionId}
                           </a>
                           <span
@@ -101,6 +108,19 @@ const ManagePaymentsOwner = () => {
                         <p className="text-black dark:text-white">
                           Amount: {payment.amount} PKR
                         </p>
+                      </div>
+                      <div className="flex items-center mb-4">
+                        <a
+                          href={payment.transactionImage}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={payment.transactionImage}
+                            alt="Transaction"
+                            className="w-32 h-32 object-cover rounded-lg shadow-md"
+                          />
+                        </a>
                       </div>
                     </div>
                     <div className="flex flex-col gap-4 items-center">

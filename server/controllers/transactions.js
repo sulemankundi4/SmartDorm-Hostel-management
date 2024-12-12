@@ -1,6 +1,7 @@
 const { tryCatch, errorHandler } = require("../utils/features");
 const Transaction = require("../models/transactions");
 const Bookings = require("../models/singleBedBooking");
+const MultiSeaterBooking = require("../models/multiseaterBooking");
 
 const createTransaction = tryCatch(async (req, res, next) => {
   const { ownerName, amount, transactionId, transactionImage } = req.body;
@@ -9,11 +10,17 @@ const createTransaction = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide all required fields", 400));
   }
 
-  // Find all bookings for the specified owner
-  const updatedPayments = await Bookings.find({ HostelOwnerName: ownerName });
+  // Find all single room bookings for the specified owner
+  const updatedSingleRoomPayments = await Bookings.find({ HostelOwnerName: ownerName });
 
-  // Update the isPaidToOwner field to true for all bookings
+  // Find all multi-seater bookings for the specified owner
+  const updatedMultiSeaterPayments = await MultiSeaterBooking.find({ HostelOwnerName: ownerName });
+
+  // Update the isPaidToOwner field to true for all single room bookings
   await Bookings.updateMany({ HostelOwnerName: ownerName }, { $set: { IsPaidToOwner: true } });
+
+  // Update the isPaidToOwner field to true for all multi-seater bookings
+  await MultiSeaterBooking.updateMany({ HostelOwnerName: ownerName }, { $set: { IsPaidToOwner: true } });
 
   // Create a new transaction
   const newTransaction = await Transaction.create({
@@ -51,21 +58,27 @@ const verifyPayment = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide all required fields", 400));
   }
 
-  // Find the transaction by transactionId and ownerId
-  const transaction = await Transaction.findOne({ transactionId, ownerName: ownerId });
+  // Find the transaction by transactionId and ownerId in both collections
+  let transaction = await Transaction.findOne({ transactionId, ownerName: ownerId });
+  let multiSeaterTransaction = await MultiSeaterTransaction.findOne({ transactionId, ownerName: ownerId });
 
-  if (!transaction) {
+  if (!transaction && !multiSeaterTransaction) {
     return next(new errorHandler("Transaction not found", 404));
   }
 
   // Update the isRecieved field to true
-  transaction.isRecieved = true;
-  await transaction.save();
+  if (transaction) {
+    transaction.isRecieved = true;
+    await transaction.save();
+  } else if (multiSeaterTransaction) {
+    multiSeaterTransaction.isRecieved = true;
+    await multiSeaterTransaction.save();
+  }
 
   res.status(200).json({
     success: true,
     message: "Payment verified successfully",
-    data: transaction,
+    data: transaction || multiSeaterTransaction,
   });
 });
 

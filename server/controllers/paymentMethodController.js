@@ -138,8 +138,11 @@ const getOwnerPaymentDetails = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please provide an owner ID", 400));
   }
 
-  const bookings = await Bookings.find({ HostelOwnerName: ownerId });
-  let NotPaidBookings = bookings.filter((booking) => !booking.IsPaidToOwner);
+  const singleRoomBookings = await Bookings.find({ HostelOwnerName: ownerId });
+  const multiSeaterBookings = await MultiSeaterBooking.find({ HostelOwnerName: ownerId });
+
+  const allBookings = [...singleRoomBookings, ...multiSeaterBookings];
+  const NotPaidBookings = allBookings.filter((booking) => !booking.IsPaidToOwner);
 
   let expectedPaymentToCome = NotPaidBookings.reduce((acc, booking) => acc + booking.Amount, 0);
 
@@ -147,11 +150,9 @@ const getOwnerPaymentDetails = tryCatch(async (req, res, next) => {
   expectedPaymentToCome = (expectedPaymentToCome / 1000).toFixed(1);
 
   const totalTransactions = await Transaction.find({ ownerName: ownerId });
-  console.log(totalTransactions);
   let totalPaymentRecived = totalTransactions.reduce((acc, payment) => acc + payment.amount, 0);
 
   totalPaymentRecived = (totalPaymentRecived / 1000).toFixed(1);
-
   res.status(200).json({
     success: true,
     data: {
