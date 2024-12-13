@@ -117,9 +117,10 @@ const HostelDetails = () => {
     } catch (error) {
       toast.error('Something went wrong during Booking');
       setSubmitting(false);
-      console.log(error);
     }
   };
+
+  console.log(user);
 
   return (
     <>
@@ -240,7 +241,7 @@ const HostelDetails = () => {
                   </div>
 
                   <div className="mt-6">
-                    {user?.Role !== 'user' && (
+                    {user?.Role !== 'owner' && user?.Role !== 'admin' && (
                       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                         <div className="w-full md:w-1/2 p-4">
                           <div className="bg-white shadow-lg rounded-lg p-6 text-center">

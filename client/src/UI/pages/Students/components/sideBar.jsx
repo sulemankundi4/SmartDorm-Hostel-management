@@ -66,6 +66,15 @@ const SideBar = () => {
                 </span>
                 <h6 className="mb-0 font-medium">Reviews</h6>
               </Link>
+              <Link
+                to={'/student-preferences'}
+                className=" text-[#B0A3B8] flex items-center py-2 rounded hover:text-red-500 cursor-pointer"
+              >
+                <span className="me-2 mb-0">
+                  <FaRegUser className="" />
+                </span>
+                <h6 className="mb-0 font-medium">Preferences</h6>
+              </Link>
             </ul>
           </div>
         </div>

@@ -45,6 +45,7 @@ import AllTransactions from './Admin/pages/Payments/AllTransactions';
 import SeaterRooms from './UI/pages/SeaterRooms/seaterRooms';
 import BookSeaterRoom from './UI/pages/SeaterRooms/bookSeaterRooms';
 import CheckOutMultiseater from './UI/pages/SeaterRooms/checkout';
+import UserPreferencesForm from './UI/pages/Students/userPreferences';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -162,6 +163,16 @@ function App() {
               <>
                 <PageTitle title="Student Reviews | SmartDorm" />
                 <StudentReviews />
+              </>
+            }
+          />
+
+          <Route
+            path="/student-preferences"
+            element={
+              <>
+                <PageTitle title="Student Reviews | SmartDorm" />
+                <UserPreferencesForm />
               </>
             }
           />
