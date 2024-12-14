@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetListingDetailsQuery } from '../../../Redux/api/hostelApis';
 import { useNavigate } from 'react-router-dom';
 import { FaBed } from 'react-icons/fa';
 import Navbar from '../../components/navBar';
 import Footer from '../../components/footer';
+import { useSelector } from 'react-redux';
+import { useMatchUserPreferencesQuery } from '../../../Redux/api/userPreferencesApi';
 
 const SeaterRooms = () => {
   const { hostelId } = useParams();
@@ -13,6 +15,13 @@ const SeaterRooms = () => {
   });
   const navigate = useNavigate();
   const hostelData = data?.payLoad;
+  const { user } = useSelector((state) => state.userReducer);
+  const { data: matchedUsers, refetch } = useMatchUserPreferencesQuery(
+    user._id,
+  );
+  const [showModal, setShowModal] = useState(false);
+
+  console.log(matchedUsers);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -26,9 +35,26 @@ const SeaterRooms = () => {
     return bedIcons;
   };
 
+  const handleMatchPreferences = () => {
+    refetch();
+    setShowModal(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    document.body.style.overflow = 'auto';
+  };
+
   return (
     <>
       <div className="container mx-auto py-12">
+        <button
+          className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-300 mb-8"
+          onClick={handleMatchPreferences}
+        >
+          Match Preferences
+        </button>
         <h2 className="text-4xl font-bold text-center mb-12 text-black">
           Select a Seater Room
         </h2>
@@ -65,6 +91,33 @@ const SeaterRooms = () => {
             </div>
           ))}
         </div>
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-3/4 max-w-2xl">
+              <h2 className="text-2xl font-bold mb-4">Matched Users</h2>
+              {matchedUsers?.data.length > 0 ? (
+                matchedUsers.data.map((user, index) => (
+                  <div key={index} className="mb-4 flex justify-between">
+                    <p>
+                      <strong>Name:</strong> {user.name}
+                    </p>
+                    <p>
+                      <strong>Match Percentage:</strong> {user.matchPercentage}%
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p>No matched users found.</p>
+              )}
+              <button
+                className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
     </>

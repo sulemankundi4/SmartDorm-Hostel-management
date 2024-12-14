@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetListingDetailsQuery } from '../../../Redux/api/hostelApis';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import Navbar from '../../components/navBar';
 import Footer from '../../components/footer';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaCross } from 'react-icons/fa6';
 import {
@@ -17,24 +16,26 @@ import toast from 'react-hot-toast';
 const BookSeaterRoom = () => {
   const { user } = useSelector((s) => s.userReducer);
   const { hostelId, seaterType, seaterNumber } = useParams();
+  const navigate = useNavigate();
+
   const { data, isLoading } = useGetListingDetailsQuery({
     listingId: hostelId,
   });
-  const navigate = useNavigate();
-  const hostelData = data?.payLoad;
+
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showBookingDetails, setShowBookingDetails] = useState(false);
   const [bookingDetails, setBookingDetails] = useState(null);
 
+  const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
+  const [getBookingDetails] = useGetBookingDetailsMutation();
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
-  const [getBookingDetails] = useGetBookingDetailsMutation();
-
+  const hostelData = data?.payLoad;
   const filterSeaterRoom = hostelData.SeaterRooms.filter(
     (room) => room.seaterType === parseInt(seaterType),
   );
@@ -179,7 +180,7 @@ const BookSeaterRoom = () => {
 
                 {submitting ? (
                   <button
-                    disabled=""
+                    disabled="true"
                     type="button"
                     className="bg-red-500 items-center text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 mr-2"
                   >

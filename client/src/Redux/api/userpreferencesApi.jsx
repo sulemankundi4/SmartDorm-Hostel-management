@@ -29,6 +29,13 @@ export const userPreferencesApi = createApi({
       }),
       invalidatesTags: ['UserPreferences'],
     }),
+    matchUserPreferences: builder.query({
+      query: (userId) => ({
+        url: `match/${userId}`,
+        method: 'GET',
+      }),
+      providesTags: ['UserPreferences'],
+    }),
   }),
 });
 
@@ -36,4 +43,5 @@ export const {
   useCreateUserPreferencesMutation,
   useGetUserPreferencesQuery,
   useUpdateUserPreferencesMutation,
+  useMatchUserPreferencesQuery,
 } = userPreferencesApi;
