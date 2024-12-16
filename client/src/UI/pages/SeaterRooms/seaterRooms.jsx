@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useGetListingDetailsQuery } from '../../../Redux/api/hostelApis';
-import { useNavigate } from 'react-router-dom';
 import { FaBed } from 'react-icons/fa';
 import Navbar from '../../components/navBar';
 import Footer from '../../components/footer';
@@ -20,8 +19,7 @@ const SeaterRooms = () => {
     user._id,
   );
   const [showModal, setShowModal] = useState(false);
-
-  console.log(matchedUsers);
+  const [selectedUserPreferences, setSelectedUserPreferences] = useState(null);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -38,12 +36,32 @@ const SeaterRooms = () => {
   const handleMatchPreferences = () => {
     refetch();
     setShowModal(true);
-    document.body.style.overflow = 'hidden';
+    // document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     setShowModal(false);
-    document.body.style.overflow = 'auto';
+    // document.body.style.overflow = 'auto';
+  };
+
+  const handleViewPreferences = (preferences) => {
+    setSelectedUserPreferences(preferences);
+  };
+
+  const handleViewRoom = (userId) => {
+    const matchedUser = matchedUsers.data.find(
+      (user) => user.userId === userId,
+    );
+    console.log('This ', matchedUser);
+    if (matchedUser) {
+      navigate(
+        `/bookRoom/${hostelId}/${matchedUser.seaterType}/${matchedUser.count}`,
+      );
+    }
+  };
+
+  const closePreferencesModal = () => {
+    setSelectedUserPreferences(null);
   };
 
   return (
@@ -92,9 +110,11 @@ const SeaterRooms = () => {
           ))}
         </div>
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center">
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex z-10 justify-center items-center">
             <div className="bg-white p-8 rounded-lg shadow-lg w-3/4 max-w-2xl">
-              <h2 className="text-2xl font-bold mb-4">Matched Users</h2>
+              <h2 className="text-2xl font-bold text-black mb-4">
+                Matched Users
+              </h2>
               {matchedUsers?.data.length > 0 ? (
                 matchedUsers.data.map((user, index) => (
                   <div key={index} className="mb-4 flex justify-between">
@@ -104,14 +124,58 @@ const SeaterRooms = () => {
                     <p>
                       <strong>Match Percentage:</strong> {user.matchPercentage}%
                     </p>
+                    <button
+                      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 mr-2"
+                      onClick={() => handleViewPreferences(user.preferences)}
+                    >
+                      View Preferences
+                    </button>
+                    <button
+                      className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
+                      onClick={() => handleViewRoom(user.userId)}
+                    >
+                      View Room
+                    </button>
                   </div>
                 ))
               ) : (
-                <p>No matched users found.</p>
+                <p>No matched users found or update your preferences please</p>
               )}
               <button
                 className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300"
                 onClick={closeModal}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+        {selectedUserPreferences && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-3/4 max-w-2xl">
+              <h2 className="text-2xl font-bold mb-4">User Preferences</h2>
+              <p>
+                <strong>Sleeping Habits:</strong>{' '}
+                {selectedUserPreferences.sleepingHabits}
+              </p>
+              <p>
+                <strong>University Name:</strong>{' '}
+                {selectedUserPreferences.universityName}
+              </p>
+              <p>
+                <strong>City:</strong> {selectedUserPreferences.city}
+              </p>
+              <p>
+                <strong>Shared Expense:</strong>{' '}
+                {selectedUserPreferences.sharedExpense}
+              </p>
+              <p>
+                <strong>Smoking Habits:</strong>{' '}
+                {selectedUserPreferences.smokingHabits}
+              </p>
+              <button
+                className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300"
+                onClick={closePreferencesModal}
               >
                 Close
               </button>

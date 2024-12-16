@@ -76,7 +76,6 @@ const matchUserPreferences = tryCatch(async (req, res, next) => {
 
     if (roomBooking) {
       const student = await Student.findOne({ _id: prefs.userId }); // Fetch student details
-      console.log(student);
       let matchCount = 0;
       if (prefs.sleepingHabits === userPreferences.sleepingHabits) matchCount++;
       if (prefs.universityName === userPreferences.universityName) matchCount++;
@@ -85,12 +84,16 @@ const matchUserPreferences = tryCatch(async (req, res, next) => {
       if (prefs.smokingHabits === userPreferences.smokingHabits) matchCount++;
 
       const matchPercentage = (matchCount / 5) * 100;
-      matchedUsers.push({
-        userId: prefs.userId,
-        name: student ? student.Name : "Unknown",
-        matchPercentage,
-        preferences: prefs,
-      });
+      if (matchPercentage >= 60) {
+        matchedUsers.push({
+          userId: prefs.userId,
+          name: student ? student.Name : "Unknown",
+          matchPercentage,
+          preferences: prefs,
+          seaterType: roomBooking.SeaterType,
+          count: roomBooking.Count,
+        });
+      }
     }
   }
 

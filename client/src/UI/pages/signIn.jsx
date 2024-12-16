@@ -30,7 +30,7 @@ const SignIn = () => {
         title: 'Success',
         text: 'Logged in successfully',
       });
-      navigate('/');
+      navigate('/dashboard');
     } catch (e) {
       toast.error('Something went wrong during sign in');
     }
