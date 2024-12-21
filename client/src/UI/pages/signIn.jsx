@@ -20,6 +20,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       const response = await loginApi({ body: formData });
+      const role = response?.data.payLoad.user.Role;
 
       if (response.error) {
         setFormData({ Email: '', Password: '' });
@@ -30,7 +31,12 @@ const SignIn = () => {
         title: 'Success',
         text: 'Logged in successfully',
       });
-      navigate('/dashboard');
+      console.log(response);
+      if (role === 'admin' || role === 'owner') {
+        navigate('/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (e) {
       toast.error('Something went wrong during sign in');
     }

@@ -3,6 +3,7 @@ const { stripe } = require("../utils/stripe");
 const SingleBedBooking = require("../models/singleBedBooking");
 const Hostel = require("../models/hostel");
 const MultiSeaterRoomBooking = require("../models/multiseaterBooking");
+const PaymentMethod = require("../models/paymentMethod");
 
 const createPaymentIntent = tryCatch(async (req, res, next) => {
   const { amount } = req.body;
@@ -141,4 +142,10 @@ const getBookingDetails = tryCatch(async (req, res, next) => {
   });
 });
 
-module.exports = { createPaymentIntent, createSingleRoomBooking, createSeaterRoomBooking, getBookingDetails };
+const deletePaymentMethod = tryCatch(async (req, res, next) => {
+  console.log("This is coming");
+  const { id } = req.params;
+  await PaymentMethod.findByIdAndDelete(id);
+  res.status(200).json({ message: "Payment method deleted successfully" });
+});
+module.exports = { createPaymentIntent, createSingleRoomBooking, createSeaterRoomBooking, getBookingDetails, deletePaymentMethod };

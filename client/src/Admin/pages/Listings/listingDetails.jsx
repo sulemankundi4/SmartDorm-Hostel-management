@@ -58,9 +58,7 @@ const ListingDetails = () => {
             <h3 className="text-2xl mb-2 font-bold text-black dark:text-white">
               Hi {`${user.Name}`}!
             </h3>
-            <p className="text-black dark:text-white">
-              Review the Hostel info of HOSTEL NAME
-            </p>
+            <p className="text-black dark:text-white">Review the Hostel info</p>
           </div>
           <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg p-6 dark:bg-boxdark">
             <div className="w-full mb-4 md:w-1/2 md:mb-0 relative">

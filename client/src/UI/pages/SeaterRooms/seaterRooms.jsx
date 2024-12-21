@@ -15,8 +15,9 @@ const SeaterRooms = () => {
   const navigate = useNavigate();
   const hostelData = data?.payLoad;
   const { user } = useSelector((state) => state.userReducer);
+
   const { data: matchedUsers, refetch } = useMatchUserPreferencesQuery(
-    user._id,
+    user?._id,
   );
   const [showModal, setShowModal] = useState(false);
   const [selectedUserPreferences, setSelectedUserPreferences] = useState(null);
@@ -67,15 +68,15 @@ const SeaterRooms = () => {
   return (
     <>
       <div className="container mx-auto py-12">
+        <h2 className="text-4xl font-bold text-center mb-12 text-black">
+          Select a Seater Room
+        </h2>
         <button
           className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-300 mb-8"
           onClick={handleMatchPreferences}
         >
           Match Preferences
         </button>
-        <h2 className="text-4xl font-bold text-center mb-12 text-black">
-          Select a Seater Room
-        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {hostelData.SeaterRooms.map((seaterRoom, seaterIndex) => (
             <div

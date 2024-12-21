@@ -83,6 +83,14 @@ const HostelDetails = () => {
     setShowModal(true);
   };
 
+  const handleMultiSeaterButton = () => {
+    if (!user) {
+      return navigate('/signup');
+    }
+
+    navigate(`/seaterRooms/${hostelData._id}`);
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -132,7 +140,7 @@ const HostelDetails = () => {
           <Navbar />
           <section
             className={`relative table w-full items-center py-36 bg-top bg-no-repeat bg-cover`}
-            style={{ backgroundImage: `url(${hostelData.HostelImages[1]})` }}
+            style={{ backgroundImage: `url(${hostelData.HostelImages[0]})` }}
           >
             <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-900"></div>
             <div className="container relative">
@@ -199,15 +207,6 @@ const HostelDetails = () => {
                         </span>
                       </div>
                     </li>
-                    <li className="inline-flex items-center me-5 mt-5">
-                      <IoBedSharp className="size-5 text-red-500" />
-                      <div className="ms-3">
-                        <p className="font-medium text-black">Double Rooms</p>
-                        <span className="text-slate-400 font-medium text-sm">
-                          {hostelData.DoubleBedRooms} Double Rooms
-                        </span>
-                      </div>
-                    </li>
 
                     <li className="inline-flex items-center me-5 mt-5">
                       <FaGlobe className="size-5 text-red-500" />
@@ -235,7 +234,7 @@ const HostelDetails = () => {
                       Service Descriptions:
                     </h5>
 
-                    <p className="text-slate-400 mt-6">
+                    <p className="text-slate-400 mt-4">
                       {hostelData.HostelDescription}
                     </p>
                   </div>
@@ -243,7 +242,7 @@ const HostelDetails = () => {
                   <div className="mt-6">
                     {user?.Role !== 'owner' && user?.Role !== 'admin' && (
                       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                        <div className="w-full md:w-1/2 p-4">
+                        <div className="w-full md:w-1/2 p-2">
                           <div className="bg-white shadow-lg rounded-lg p-6 text-center">
                             <h3 className="text-2xl text-black font-semibold mb-4">
                               Book a Single Room
@@ -326,17 +325,15 @@ const HostelDetails = () => {
                         </div>
                         <div className="w-full md:w-1/2 p-4">
                           <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-                            <h3 className="text-xl text-black font-semibold mb-4">
+                            <h3 className="text-2xl text-black font-semibold mb-4">
                               Book a Seater Room
                             </h3>
                             <p className="text-gray-600 mb-4">
                               Choose from 2-seater, 3-seater, or 4-seater rooms.
                             </p>
                             <button
-                              className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
-                              onClick={() =>
-                                navigate(`/seaterRooms/${hostelData._id}`)
-                              }
+                              className="bg-red-500 mt-6 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+                              onClick={handleMultiSeaterButton}
                             >
                               Select Room
                             </button>

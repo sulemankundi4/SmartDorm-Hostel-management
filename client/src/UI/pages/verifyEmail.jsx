@@ -6,9 +6,6 @@ import { Navigate } from 'react-router-dom';
 
 const VerifyEmail = () => {
   const { user } = useSelector((s) => s.userReducer);
-  if (user?.IsEmailVerified) {
-    return <Navigate to="/" />;
-  }
   const [isButtonDisabled, setButtonDisabled] = useState(
     localStorage.getItem('isButtonDisabled') === 'true',
   );
@@ -17,20 +14,6 @@ const VerifyEmail = () => {
   );
 
   const [resendEmail] = useResendEmailMutation();
-
-  const handleClick = async () => {
-    setButtonDisabled(true);
-    localStorage.setItem('isButtonDisabled', 'true');
-    // Call your function to resend the email here
-    try {
-      const res = await resendEmail(user?.Email);
-      if (res.error) return toast.error('Email could not be sent');
-
-      toast.success('Email has been sent to the user');
-    } catch (e) {
-      toast.error('Some thing went wrong during email sending');
-    }
-  };
 
   useEffect(() => {
     let timer;
@@ -47,6 +30,24 @@ const VerifyEmail = () => {
     }
     return () => clearTimeout(timer);
   }, [isButtonDisabled, countdown]);
+
+  const handleClick = async () => {
+    setButtonDisabled(true);
+    localStorage.setItem('isButtonDisabled', 'true');
+    // Call your function to resend the email here
+    try {
+      const res = await resendEmail(user?.Email);
+      if (res.error) return toast.error('Email could not be sent');
+
+      toast.success('Email has been sent to the user');
+    } catch (e) {
+      toast.error('Some thing went wrong during email sending');
+    }
+  };
+
+  if (user?.IsEmailVerified) {
+    return <Navigate to="/dashboard" />;
+  }
 
   return (
     <div className="relative font-inter antialiased bg-white">

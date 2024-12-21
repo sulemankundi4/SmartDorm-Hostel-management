@@ -1,10 +1,12 @@
 import React from 'react';
 import DefaultLayout from './../../layout/DefaultLayout';
-import { FaCreditCard, FaMobileAlt } from 'react-icons/fa';
+import { FaCreditCard, FaMobileAlt, FaTrash } from 'react-icons/fa';
 import { MdAdd } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useGetPaymentMethodsQuery } from '../../../Redux/api/paymentMethodApis';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
 
 const PaymentMethod = () => {
   const { user } = useSelector((s) => s.userReducer);
@@ -12,6 +14,17 @@ const PaymentMethod = () => {
   const { data: paymentMethodsData, isLoading } = useGetPaymentMethodsQuery({
     userId: user._id,
   });
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4040/api/v1/payments/${id}`);
+      toast.success('Payment method deleted successfully');
+      window.location.reload(); // Reload the page upon successful deletion
+    } catch (error) {
+      console.log(error);
+      toast.error('Error deleting payment method');
+    }
+  };
 
   return (
     <DefaultLayout>
@@ -91,6 +104,12 @@ const PaymentMethod = () => {
                   </div>
                 </div>
               </div>
+              <button
+                className="text-red-500 hover:text-red-700"
+                onClick={() => handleDelete(method._id)}
+              >
+                <FaTrash size={20} />
+              </button>
             </div>
           ))
         )}
