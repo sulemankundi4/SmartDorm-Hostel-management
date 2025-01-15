@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useGetListingDetailsQuery } from '../../../Redux/api/hostelApis';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import Navbar from '../../components/navBar';
 import Footer from '../../components/footer';
 import { useSelector } from 'react-redux';
 import { FaCross } from 'react-icons/fa6';
@@ -12,6 +11,8 @@ import {
   useGetBookingDetailsMutation,
 } from '../../../Redux/api/paymentApis';
 import toast from 'react-hot-toast';
+import Navbar from './../../components/navBar';
+import TopBar from './../../components/topBar';
 
 const BookSeaterRoom = () => {
   const { user } = useSelector((s) => s.userReducer);
@@ -117,6 +118,11 @@ const BookSeaterRoom = () => {
 
   return (
     <>
+      <div className="mb-16">
+        <TopBar />
+        <Navbar />
+      </div>
+
       <div className="container mx-auto py-12 px-4">
         <h2 className="text-4xl font-bold text-center mb-12 text-black">
           {seaterType}-Seater Room
@@ -128,10 +134,10 @@ const BookSeaterRoom = () => {
               className="bg-white shadow-lg rounded-lg p-6 text-center transform transition duration-500 hover:scale-105"
             >
               <h3 className="text-2xl text-black font-semibold mb-4">
-                Room {roomIndex + 1}
+                Seat {roomIndex + 1}
               </h3>
               <p className="text-gray-600 mb-4">
-                Room Number: {room.roomNumber}
+                Seat Number: {room.roomNumber}
               </p>
               <div className="flex justify-center items-center mb-4">
                 {getStatusIcon(room.isAvailable)}

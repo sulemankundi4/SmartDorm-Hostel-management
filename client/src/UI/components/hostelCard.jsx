@@ -8,11 +8,11 @@ import { AiFillStar } from 'react-icons/ai';
 
 const HostelCard = ({ item, rating }) => {
   return (
-    <div className="group rounded-md shadow dark:shadow-gray-700">
-      <div className="relative overflow-hidden rounded-t-md shadow dark:shadow-gray-700 mx-3 mt-3">
+    <div className="group rounded-md shadow ">
+      <div className="relative overflow-hidden rounded-t-md shadow mx-3 mt-3">
         <img
-          src={item?.HostelImages[1] || hostel1}
-          className="scale-125 group-hover:scale-100 duration-500"
+          src={item?.HostelImages[0] || hostel1}
+          className="scale-125 w-full min-h-56 max-h-56 group-hover:scale-100 duration-500"
           alt=""
         />
       </div>
@@ -47,19 +47,17 @@ const HostelCard = ({ item, rating }) => {
                     />
                   </li>
                 ))}
-                <li className="inline ms-1 text-black dark:text-white text-sm">
+                <li className="inline ms-1 text-black text-sm">
                   {rating.averageRating} ({rating.totalReviews})
                 </li>
               </>
             ) : (
-              <li className="inline ms-1 text-black dark:text-white text-sm">
-                No ratings
-              </li>
+              <li className="inline ms-1 text-black text-sm">No ratings</li>
             )}
           </ul>
         </div>
 
-        <div className="mt-4 pt-4 flex justify-between items-center border-t border-slate-100 dark:border-gray-800">
+        <div className="mt-4 pt-4 flex justify-between items-center border-t border-slate-100">
           <h5 className="text-lg font-medium text-red-500">
             {item?.HostelRent} {item.Currency} / Month
           </h5>

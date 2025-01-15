@@ -46,6 +46,7 @@ import SeaterRooms from './UI/pages/SeaterRooms/seaterRooms';
 import BookSeaterRoom from './UI/pages/SeaterRooms/bookSeaterRooms';
 import CheckOutMultiseater from './UI/pages/SeaterRooms/checkout';
 import UserPreferencesForm from './UI/pages/Students/userPreferences';
+import SeaterRoomDetails from './UI/pages/SeaterRooms/SeaterRoomDetails';
 
 function App() {
   const jwtCookieToken = document.cookie
@@ -269,7 +270,7 @@ function App() {
           }
         />
         <Route
-          path="/seaterRooms/:hostelId"
+          path="/seaterRooms/:hostelId/"
           element={
             <>
               <PageTitle title="Seater Rooms | SmartDorm" />
@@ -277,6 +278,16 @@ function App() {
             </>
           }
         />
+        <Route
+          path="/seaterRooms/:hostelId/:seaterType"
+          element={
+            <>
+              <PageTitle title="Seater Rooms | SmartDorm" />
+              <SeaterRoomDetails />
+            </>
+          }
+        />
+        {/* navigate(`/seaterRooms/${hostelId}/${seaterType}`); */}
         <Route
           path="/bookRoom/:hostelId/:seaterType/:seaterNumber"
           element={

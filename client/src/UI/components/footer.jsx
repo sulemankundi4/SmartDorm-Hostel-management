@@ -11,7 +11,7 @@ import logo from '../../assets/Images/logo.png';
 const Footer = () => {
   return (
     <>
-      <footer className=" bg-[#161C28] relative text-white dark:text-white ">
+      <footer className=" bg-[#161C28] relative text-white  ">
         <div className="container relative w-[93%] mx-auto">
           <div className="grid grid-cols-12">
             <div className="col-span-12">

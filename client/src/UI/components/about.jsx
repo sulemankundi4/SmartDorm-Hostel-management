@@ -22,11 +22,11 @@ const About = () => {
             <div className="relative">
               <img
                 src={AboutPic}
-                className="mx-auto rounded-3xl shadow dark:shadow-gray-700 w-[90%]"
+                className="mx-auto rounded-3xl shadow w-[90%]"
                 alt=""
               />
 
-              <div className="absolute flex items-center bottom-16 md:-start-10 -start-5 p-4 rounded-lg shadow-md dark:shadow-gray-800 bg-white dark:bg-slate-900 w-56 m-3">
+              <div className="absolute flex items-center bottom-16 md:-start-10 -start-5 p-4 rounded-lg shadow-md bg-white w-56 m-3">
                 <div className="flex items-center justify-center h-[65px] min-w-[65px] bg-red-500/5 text-red-500 text-center rounded-xl me-3">
                   <FiUsers className="size-8" />
                 </div>
@@ -38,7 +38,7 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="absolute flex items-center top-16 md:-end-10 -end-5 p-4 rounded-lg shadow-md dark:shadow-gray-800 bg-white dark:bg-slate-900 w-60 m-3">
+              <div className="absolute flex items-center top-16 md:-end-10 -end-5 p-4 rounded-lg shadow-md bg-white w-60 m-3">
                 <div className="flex items-center justify-center h-[65px] min-w-[65px] bg-red-500/5 text-red-500 text-center rounded-xl me-3">
                   <TbWorld className="size-8" />
                 </div>

@@ -18,15 +18,6 @@ const AddPaymentMethod = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await addPaymentMethod({
-        methodType,
-        cardNumber,
-        bankName,
-        phoneNumber,
-        userName,
-        userId: user?._id,
-      });
-
       if (!methodType || !userName) {
         return toast.error('Please provide all required fields');
       }
@@ -56,6 +47,14 @@ const AddPaymentMethod = () => {
       if (response.error) {
         return toast.error(response.error.data.message);
       }
+      const response = await addPaymentMethod({
+        methodType,
+        cardNumber,
+        bankName,
+        phoneNumber,
+        userName,
+        userId: user?._id,
+      });
 
       toast.success('Payment method added successfully');
       navigate('/manage/payment/methods');
@@ -95,11 +94,11 @@ const AddPaymentMethod = () => {
                     Account Number
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     value={cardNumber}
                     onChange={(e) => setCardNumber(e.target.value)}
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    placeholder="Enter card number"
+                    placeholder="Enter Account number"
                     required
                   />
                 </div>

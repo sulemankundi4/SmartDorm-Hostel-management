@@ -2,6 +2,9 @@ import React from 'react';
 import { FaRegUser } from 'react-icons/fa6';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { FaAddressBook } from 'react-icons/fa';
+import { MdOutlineReviews } from 'react-icons/md';
+import { RiFilePaperFill } from 'react-icons/ri';
 
 const SideBar = () => {
   const { user } = useSelector((state) => state.userReducer);
@@ -53,7 +56,7 @@ const SideBar = () => {
                 className=" text-[#B0A3B8] flex items-center py-2 rounded hover:text-red-500 cursor-pointer"
               >
                 <span className="me-2 mb-0">
-                  <FaRegUser className="" />
+                  <FaAddressBook />
                 </span>
                 <h6 className="mb-0 font-medium">My Bookings</h6>
               </Link>
@@ -62,7 +65,7 @@ const SideBar = () => {
                 className=" text-[#B0A3B8] flex items-center py-2 rounded hover:text-red-500 cursor-pointer"
               >
                 <span className="me-2 mb-0">
-                  <FaRegUser className="" />
+                  <MdOutlineReviews />
                 </span>
                 <h6 className="mb-0 font-medium">Reviews</h6>
               </Link>
@@ -71,7 +74,7 @@ const SideBar = () => {
                 className=" text-[#B0A3B8] flex items-center py-2 rounded hover:text-red-500 cursor-pointer"
               >
                 <span className="me-2 mb-0">
-                  <FaRegUser className="" />
+                  <RiFilePaperFill />
                 </span>
                 <h6 className="mb-0 font-medium">Preferences</h6>
               </Link>

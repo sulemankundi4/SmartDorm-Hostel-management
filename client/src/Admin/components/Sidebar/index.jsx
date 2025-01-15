@@ -6,6 +6,8 @@ import { FaUsers } from 'react-icons/fa6';
 import { AiTwotonePropertySafety } from 'react-icons/ai';
 import { MdTrackChanges } from 'react-icons/md';
 import { MdPayment } from 'react-icons/md';
+import { MdLibraryBooks } from 'react-icons/md';
+import { MdOutlinePayments } from 'react-icons/md';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const location = useLocation();
@@ -235,8 +237,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       'bg-graydark dark:bg-meta-4'
                     }`}
                   >
-                    <MdPayment />
-                    Single Room Bookings
+                    <MdLibraryBooks />
+                    All Bookings
                   </NavLink>
                 </li>
               )}
@@ -264,7 +266,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       'bg-graydark dark:bg-meta-4'
                     }`}
                   >
-                    <MdPayment />
+                    <MdOutlinePayments />
                     Manage Payments
                   </NavLink>
                 </li>

@@ -143,13 +143,7 @@ const AllBookings = () => {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col items-center md:flex-row md:space-x-4 w-full my-8">
-              <div className="w-full md:w-1/2">
-                <h6 className="text-xl font-bold text-black dark:text-white">
-                  Multi-Seater Room Bookings
-                </h6>
-              </div>
-            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {multiSeaterData?.bookings?.map((booking) => (
                 <div

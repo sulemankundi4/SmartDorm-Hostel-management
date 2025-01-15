@@ -92,9 +92,12 @@ const Navbar = () => {
             <>
               <Link
                 className="xl:border-none xl:pb-0 border-b border-b-[#00000042] pb-2"
-                to="/"
+                to="/student-bookings"
               >
-                {user?.Role === 'user' && 'Bookings'}
+                {/* or condi */}
+
+                {(user?.Role === 'user' || user?.Role === 'student') &&
+                  'Bookings'}
               </Link>
 
               <Link

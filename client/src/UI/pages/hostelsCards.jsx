@@ -9,8 +9,6 @@ const HostelCards = () => {
   const { data: ratingsData, isLoading: loadingRatings } =
     useAverageRatingsQuery();
 
-  console.log('ratingsData:', ratingsData);
-
   return (
     <>
       {isLoading || loadingRatings ? (
