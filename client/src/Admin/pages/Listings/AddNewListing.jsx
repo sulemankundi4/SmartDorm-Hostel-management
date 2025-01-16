@@ -338,7 +338,7 @@ const AddNewListing = () => {
         },
       });
       setUploading(false);
-
+      console.log(res);
       if (res.data) {
         navigate('/myListings');
         return basicAlert('Success', 'Listing Created Successfully', 'success');

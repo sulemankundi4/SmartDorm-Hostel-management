@@ -44,9 +44,6 @@ const AddPaymentMethod = () => {
         return toast.error('Phone number must be 11 digits long');
       }
 
-      if (response.error) {
-        return toast.error(response.error.data.message);
-      }
       const response = await addPaymentMethod({
         methodType,
         cardNumber,
@@ -56,9 +53,14 @@ const AddPaymentMethod = () => {
         userId: user?._id,
       });
 
+      if (response.error) {
+        return toast.error(response.error.data.message);
+      }
+
       toast.success('Payment method added successfully');
       navigate('/manage/payment/methods');
     } catch (e) {
+      console.log('This is error', e);
       toast.error('Something went wrong');
     }
   };

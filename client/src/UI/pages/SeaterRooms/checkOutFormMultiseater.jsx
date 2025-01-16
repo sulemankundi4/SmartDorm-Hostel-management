@@ -32,77 +32,83 @@ const CheckoutFormMultiseater = ({
   const [checkExistingBooking] = useCheckExistingBookingsMutation();
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
+    try {
+      e.preventDefault();
+      if (!stripe || !elements) return;
 
-    const result = await confirmAlert('Are you sure want to Book this Hostel?');
+      const result = await confirmAlert(
+        'Are you sure want to Book this Hostel?',
+      );
 
-    const bookingData = {
-      CheckInDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-      Amount: amount,
-      HostelOwnerName: ownerId,
-      HostelName: hostelId,
-      StudentName: user?._id,
-      RoomNumber: roomNumber,
-      SeaterType: seaterType,
-      Count: count,
-    };
+      const bookingData = {
+        CheckInDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+        Amount: amount,
+        HostelOwnerName: ownerId,
+        HostelName: hostelId,
+        StudentName: user?._id,
+        RoomNumber: roomNumber,
+        SeaterType: seaterType,
+        Count: count,
+      };
 
-    const { StudentName, CheckInDate } = bookingData;
+      const { StudentName, CheckInDate } = bookingData;
 
-    const CheckOutDate = new Date(bookingData.CheckInDate);
-    CheckOutDate.setMonth(CheckOutDate.getMonth() + 1);
+      const CheckOutDate = new Date(bookingData.CheckInDate);
+      CheckOutDate.setMonth(CheckOutDate.getMonth() + 1);
 
-    if (result.isConfirmed) {
-      setIsProcessing(true);
+      if (result.isConfirmed) {
+        setIsProcessing(true);
 
-      // Validate booking before processing payment
-      const { data: validationData, error: validationError } =
-        await checkExistingBooking({
-          StudentName,
-          CheckInDate,
-          CheckOutDate,
+        // Validate booking before processing payment
+        const { data: validationData, error: validationError } =
+          await checkExistingBooking({
+            StudentName,
+            CheckInDate,
+            CheckOutDate,
+          });
+
+        if (validationError) {
+          setIsProcessing(false);
+          navigate('/');
+          return toast.error(validationError.data.message);
+        }
+
+        const { paymentIntent, error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: { return_url: window.location.origin },
+          redirect: 'if_required',
         });
 
-      if (validationError) {
-        setIsProcessing(false);
-        navigate('/');
-        return toast.error(validationError.data.message);
-      }
-
-      const { paymentIntent, error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: { return_url: window.location.origin },
-        redirect: 'if_required',
-      });
-
-      if (error) {
-        setIsProcessing(false);
-        return toast.error(error.message || 'An error occurred');
-      }
-
-      if (paymentIntent.status === 'succeeded') {
-        const { data } = await createSeaterRoomBooking({ body: bookingData });
-        console.log(data);
-        if (data.success) {
-          basicAlert(
-            'Payment Success!',
-            'The room has been booked you will be notified once the owner verify info. Check status at your profile',
-            'success',
-          );
-        } else {
-          return basicAlert('Failed!', data.message, 'error');
+        if (error) {
+          setIsProcessing(false);
+          return toast.error(error.message || 'An error occurred');
         }
-        setIsProcessing(false);
 
-        navigate('/');
+        if (paymentIntent.status === 'succeeded') {
+          const { data } = await createSeaterRoomBooking({ body: bookingData });
+          console.log(data);
+          if (data.success) {
+            basicAlert(
+              'Payment Success!',
+              'The room has been booked you will be notified once the owner verify info. Check status at your profile',
+              'success',
+            );
+          } else {
+            return basicAlert('Failed!', data.message, 'error');
+          }
+          setIsProcessing(false);
+
+          navigate('/');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        basicAlert(
+          'Cancelled',
+          'The Hostel Booking has been cancelled.',
+          'error',
+        );
       }
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      basicAlert(
-        'Cancelled',
-        'The Hostel Booking has been cancelled.',
-        'error',
-      );
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -80,6 +80,7 @@ const EditListing = () => {
 
   const { data, isLoading } = useGetListingDetailsQuery({ listingId: id });
   const hostelData = data?.payLoad;
+  console.log(hostelData);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -113,12 +114,34 @@ const EditListing = () => {
     },
   };
 
+  const [seaterRooms, setSeaterRooms] = useState([]);
+  const [initialSeaterCounts, setInitialSeaterCounts] = useState({});
+  const [seaterCounts, setSeaterCounts] = useState({ 2: 0, 3: 0, 4: 0 });
+  console.log(seaterCounts);
   useEffect(() => {
     if (hostelData) {
       setListingData(hostelData);
       setFoodMenu(JSON.parse(JSON.stringify(hostelData.FoodMenu)));
+      setSeaterRooms(hostelData.SeaterRooms || []);
+      const initialCounts = {};
+      const counts = { 2: 0, 3: 0, 4: 0 };
+      hostelData.SeaterRooms.forEach((room) => {
+        initialCounts[room.seaterType] = room.count;
+        counts[room.seaterType] += room.count;
+      });
+      setInitialSeaterCounts(initialCounts);
+      setSeaterCounts(initialCounts);
     }
   }, [hostelData]);
+
+  const handleSeaterRoomChange = (e, seaterType) => {
+    const { value } = e.target;
+
+    setSeaterCounts((prevCounts) => ({
+      ...prevCounts,
+      [seaterType]: value,
+    }));
+  };
 
   const handleChange = async (e) => {
     e.preventDefault();
@@ -197,8 +220,19 @@ const EditListing = () => {
         );
       }
 
+      // Validate seater counts
+      for (const seaterType in seaterCounts) {
+        if (seaterCounts[seaterType] < initialSeaterCounts[seaterType]) {
+          return basicAlert(
+            'Validation Error',
+            `The number of ${seaterType}-seater rooms cannot be less than the initial count.`,
+            'error',
+          );
+        }
+      }
+
       const storage = getStorage();
-      //deleting the images incase if updated
+      // Deleting the images in case if updated
       if (deleteImages.length > 0) {
         deleteImages.map(async (image) => {
           const storageRef = ref(storage, image);
@@ -210,7 +244,7 @@ const EditListing = () => {
 
       if (newImagesUploaded?.length > 0) {
         let downloadURLs = [];
-        //This will check the extension of each image
+        // This will check the extension of each image
         for (let i = 0; i < newImagesUploaded.length; i++) {
           const photo = newImagesUploaded[i];
           const fileExtension = photo.name.split('.').pop().toLowerCase();
@@ -222,7 +256,7 @@ const EditListing = () => {
               'error',
             );
           }
-          //Checking images size not allowing over 1 mb
+          // Checking images size not allowing over 1 mb
           if (photo.size > 1048576) {
             return basicAlert(
               'Validation Error',
@@ -244,25 +278,69 @@ const EditListing = () => {
           totalBytes,
         });
 
-        //creating download URL for each snapshots
+        // Creating download URL for each snapshot
         for (let i = 0; i < snapshots.length; i++) {
           const downloadURL = await getDownloadURL(snapshots[i].ref);
           downloadURLs.push(downloadURL);
         }
+
+        // Create new seater rooms if needed
+        const newSeaterRooms = [];
+        for (const seaterType in seaterCounts) {
+          const initialCount = initialSeaterCounts[seaterType] || 0;
+          const currentCount = seaterCounts[seaterType];
+          if (currentCount > initialCount) {
+            for (let i = initialCount + 1; i <= currentCount; i++) {
+              newSeaterRooms.push({
+                seaterType: parseInt(seaterType),
+                count: i,
+                rooms: Array.from({ length: seaterType }, (_, j) => ({
+                  roomNumber: `${seaterType}Seater-${i}-${j + 1}`,
+                  isAvailable: true,
+                  bookingId: null,
+                })),
+              });
+            }
+          }
+        }
+
+        console.log(newSeaterRooms);
 
         res = await updateHostel({
           body: {
             ...listingData,
             HostelImages: [...listingData.HostelImages, ...downloadURLs],
             FoodMenu: [...FoodMenu],
+            SeaterRooms: [...seaterRooms, ...newSeaterRooms],
           },
           id,
         });
       } else {
+        // Create new seater rooms if needed
+        const newSeaterRooms = [];
+        for (const seaterType in seaterCounts) {
+          const initialCount = initialSeaterCounts[seaterType] || 0;
+          const currentCount = seaterCounts[seaterType];
+          if (currentCount > initialCount) {
+            for (let i = initialCount + 1; i <= currentCount; i++) {
+              newSeaterRooms.push({
+                seaterType: parseInt(seaterType),
+                count: i,
+                rooms: Array.from({ length: seaterType }, (_, j) => ({
+                  roomNumber: `${seaterType}Seater-${i}-${j + 1}`,
+                  isAvailable: true,
+                  bookingId: null,
+                })),
+              });
+            }
+          }
+        }
+
         res = await updateHostel({
           body: {
             ...listingData,
             FoodMenu: [...FoodMenu],
+            SeaterRooms: [...seaterRooms, ...newSeaterRooms],
           },
           id,
         });
@@ -444,6 +522,57 @@ const EditListing = () => {
                       />
                     </div>
                   </div>
+
+                  <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                    <div className="w-full">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Two Seater Room
+                        <span className="text-meta-1">*</span>
+                      </label>
+                      <input
+                        name="twoSeaterRoom"
+                        onChange={(e) => handleSeaterRoomChange(e, 2)}
+                        value={seaterCounts[2]}
+                        placeholder="Enter The monthly Hostel Rent in PKR"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                    <div className="w-full">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Three Seater Room
+                        <span className="text-meta-1">*</span>
+                      </label>
+                      <input
+                        name="twoSeaterRoom"
+                        onChange={(e) => handleSeaterRoomChange(e, 3)}
+                        value={seaterCounts[3]}
+                        placeholder="Enter The monthly Hostel Rent in PKR"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                    <div className="w-full">
+                      <label className="mb-2.5 block text-black dark:text-white">
+                        Four Seater Room
+                        <span className="text-meta-1">*</span>
+                      </label>
+                      <input
+                        name="twoSeaterRoom"
+                        onChange={(e) => handleSeaterRoomChange(e, 4)}
+                        value={seaterCounts[4]}
+                        placeholder="Enter The monthly Hostel Rent in PKR"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+
                   <h1 className="font-bold my-8 underline text-lg text-center dark:text-white">
                     Food Menu Of the Hostel
                   </h1>
@@ -548,7 +677,7 @@ const EditListing = () => {
                       onClick={closeModal}
                     >
                       Close
-                    </button>
+                    </button>{' '}
                   </Modal>
                 </div>
                 <div className="mb-4.5 mt-4 mx-4 flex flex-col gap-6 xl:flex-row">

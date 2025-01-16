@@ -13,10 +13,25 @@ import {
 import { toast } from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import Loader from './../../common/Loader/index';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
   const { user } = useSelector((s) => s.userReducer);
   const isAdmin = user?.Role === 'admin';
+  const isOwner = user?.Role === 'owner';
+  const navigate = useNavigate();
+
+  // Redirect to / if user is not admin or owner
+  useEffect(() => {
+    if (!isAdmin && !isOwner) {
+      navigate('/');
+    }
+  }, [isAdmin, isOwner, navigate]);
+
+  if (!isAdmin && !isOwner) {
+    return null;
+  }
 
   const { data, isLoading, isError } = useGetPaymentDetailsQuery(
     {

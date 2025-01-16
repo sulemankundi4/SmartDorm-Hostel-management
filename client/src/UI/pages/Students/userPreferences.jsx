@@ -290,30 +290,67 @@ const UserPreferencesForm = () => {
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Shared Expense
                     </label>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="sharedExpense"
-                        checked={formData.sharedExpense}
-                        onChange={handleChange}
-                        className="mr-2 leading-tight"
-                      />
-                      <span className="text-gray-700">Yes</span>
+                    <div className="flex items-center space-x-4">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="sharedExpense"
+                          value="true"
+                          checked={formData.sharedExpense === true}
+                          onChange={() =>
+                            setFormData({ ...formData, sharedExpense: true })
+                          }
+                          className="mr-2 leading-tight"
+                        />
+                        <span className="text-gray-700">Yes</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="sharedExpense"
+                          value="false"
+                          checked={formData.sharedExpense === false}
+                          onChange={() =>
+                            setFormData({ ...formData, sharedExpense: false })
+                          }
+                          className="mr-2 leading-tight"
+                        />
+                        <span className="text-gray-700">No</span>
+                      </label>
                     </div>
                   </div>
+
                   <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Smoking Habits
                     </label>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="smokingHabits"
-                        checked={formData.smokingHabits}
-                        onChange={handleChange}
-                        className="mr-2 leading-tight"
-                      />
-                      <span className="text-gray-700">Yes</span>
+                    <div className="flex items-center space-x-4">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="smokingHabits"
+                          value="true"
+                          checked={formData.smokingHabits === true}
+                          onChange={() =>
+                            setFormData({ ...formData, smokingHabits: true })
+                          }
+                          className="mr-2 leading-tight"
+                        />
+                        <span className="text-gray-700">Yes</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="smokingHabits"
+                          value="false"
+                          checked={formData.smokingHabits === false}
+                          onChange={() =>
+                            setFormData({ ...formData, smokingHabits: false })
+                          }
+                          className="mr-2 leading-tight"
+                        />
+                        <span className="text-gray-700">No</span>
+                      </label>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">

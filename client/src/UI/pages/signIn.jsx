@@ -21,7 +21,7 @@ const SignIn = () => {
     try {
       const response = await loginApi({ body: formData });
       const role = response?.data.payLoad.user.Role;
-
+      console.log(role, response);
       if (response.error) {
         setFormData({ Email: '', Password: '' });
         return toast.error(response.error.data.message);
@@ -31,7 +31,7 @@ const SignIn = () => {
         title: 'Success',
         text: 'Logged in successfully',
       });
-      console.log(response);
+
       if (role === 'admin' || role === 'owner') {
         navigate('/dashboard');
       } else {

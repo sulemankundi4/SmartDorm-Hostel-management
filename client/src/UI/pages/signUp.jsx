@@ -97,12 +97,6 @@ const SignUp = () => {
       return;
     }
     try {
-      // if (!validateGmail(Email)) {
-      //   toast.error('The Gmail in invalid use another one!', {
-      //     position: 'bottom-center',
-      //   });
-      //   return;
-      // }
       if (!isStrongPassword(Password)) {
         toast.error(
           'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character and at least 8 characters long!',

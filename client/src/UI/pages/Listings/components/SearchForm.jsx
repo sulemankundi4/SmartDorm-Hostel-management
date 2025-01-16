@@ -81,15 +81,12 @@ const SearchForm = ({ initialFormData, onSubmit }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-6 bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700"
-    >
+    <form onSubmit={handleSubmit} className="p-6 bg-white  rounded-xl shadow">
       <div className="registration-form text-dark text-start">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
           <div>
             <label
-              className="form-label font-medium text-slate-900 dark:text-white"
+              className="form-label font-medium text-slate-900 "
               {...getLabelProps()}
             >
               Search:
@@ -100,7 +97,7 @@ const SearchForm = ({ initialFormData, onSubmit }) => {
               <input
                 name="name"
                 type="text"
-                className="w-full py-2 px-3 ps-10 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-[rgb(243,244,246)] dark:border-gray-800 focus:ring-0"
+                className="w-full py-2 px-3 ps-10 h-10 bg-transparent   rounded-md outline-none border border-[rgb(243,244,246)] focus:ring-0"
                 placeholder="Search"
                 {...getInputProps()}
                 disabled={!isEditingLocation && selectedLocationCoords}
@@ -148,7 +145,7 @@ const SearchForm = ({ initialFormData, onSubmit }) => {
           </div>
 
           <div>
-            <label className="form-label font-medium text-slate-900 dark:text-white">
+            <label className="form-label font-medium text-slate-900">
               Select Your Start Date:
             </label>
             <div className="relative mt-2">
@@ -159,14 +156,14 @@ const SearchForm = ({ initialFormData, onSubmit }) => {
                 type="date"
                 onChange={handleChange}
                 value={formData.startDate}
-                className="w-full py-2 px-3 ps-10 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-[rgb(243,244,246)] dark:border-gray-800 focus:ring-0 start"
+                className="w-full py-2 px-3 ps-10 h-10 bg-transparent  rounded-md outline-none border border-[rgb(243,244,246)] focus:ring-0 start"
                 placeholder="Select Your Date"
               />
             </div>
           </div>
 
           <div>
-            <label className="form-label font-medium text-slate-900 dark:text-white">
+            <label className="form-label font-medium text-slate-900">
               Select Your End Date:
             </label>
             <div className="relative mt-2">
@@ -177,14 +174,14 @@ const SearchForm = ({ initialFormData, onSubmit }) => {
                 type="date"
                 onChange={handleChange}
                 value={formData.endDate}
-                className="w-full py-2 px-3 ps-10 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-[rgb(243,244,246)] dark:border-gray-800 focus:ring-0 end"
+                className="w-full py-2 px-3 ps-10 h-10 bg-transparent  rounded-md outline-none border border-[rgb(243,244,246)] focus:ring-0 end"
                 placeholder="Select Your Date"
               />
             </div>
           </div>
 
           <div>
-            <label className="form-label font-medium text-slate-900 dark:text-white">
+            <label className="form-label font-medium text-slate-900">
               Distance to search within (KM):
             </label>
             <div className="relative mt-2">
@@ -193,7 +190,7 @@ const SearchForm = ({ initialFormData, onSubmit }) => {
                 type="number"
                 onChange={handleChange}
                 value={formData.distance}
-                className="w-full py-2 px-3 ps-10 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-[rgb(243,244,246)] dark:border-gray-800 focus:ring-0 end"
+                className="w-full py-2 px-3 ps-10 h-10 bg-transparent   rounded-md outline-none border border-[rgb(243,244,246)] focus:ring-0 end"
                 placeholder="Select the distance from your location in KM you want to search"
               />
             </div>

@@ -13,6 +13,7 @@ import {
 import toast from 'react-hot-toast';
 import Navbar from './../../components/navBar';
 import TopBar from './../../components/topBar';
+import { useCheckExistingBookingsMutation } from '../../../Redux/api/singleRoomBookingsApis';
 
 const BookSeaterRoom = () => {
   const { user } = useSelector((s) => s.userReducer);
@@ -31,6 +32,7 @@ const BookSeaterRoom = () => {
 
   const [createPaymentIntentApi] = useCreatePaymentIntentMutation();
   const [getBookingDetails] = useGetBookingDetailsMutation();
+  const [checkExistingBooking] = useCheckExistingBookingsMutation();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -86,6 +88,29 @@ const BookSeaterRoom = () => {
 
   const createPaymentIntent = async () => {
     try {
+      const bookingData = {
+        CheckInDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+        StudentName: user?._id,
+      };
+
+      const { StudentName, CheckInDate } = bookingData;
+
+      const CheckOutDate = new Date(bookingData.CheckInDate);
+      CheckOutDate.setMonth(CheckOutDate.getMonth() + 1);
+
+      // Validate booking before processing payment
+      const { data: validationData, error: validationError } =
+        await checkExistingBooking({
+          StudentName,
+          CheckInDate,
+          CheckOutDate,
+        });
+
+      if (validationError) {
+        navigate('/');
+        return toast.error(validationError.data.message);
+      }
+
       setSubmitting(true);
       const { data } = await createPaymentIntentApi({
         amount: hostelData.HostelRent,
@@ -156,14 +181,15 @@ const BookSeaterRoom = () => {
               >
                 {room.isAvailable ? 'Book Now' : 'Unavailable'}
               </button>
-              {!room.isAvailable && (
+              {/* {!room.isAvailable && (
                 <button
                   className="bg-blue-500 text-white py-2 px-2 rounded-lg hover:bg-blue-600 transition duration-300 mt-2"
+
                   onClick={() => handleShowBookingDetails(room.roomNumber)}
                 >
-                  Booking Details
+                  Booked
                 </button>
-              )}
+              )} */}
             </div>
           ))}
           {showModal && (

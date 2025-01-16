@@ -8,7 +8,7 @@ const createNewListing = tryCatch(async (req, res, next) => {
     return next(new errorHandler("Please fill in all the fields", 400));
   }
 
-  console.log(SeaterRooms);
+  console.log(req.body);
 
   const newHostel = await Hostel.create({
     HostelName,

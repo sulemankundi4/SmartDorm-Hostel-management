@@ -83,14 +83,13 @@ const createSeaterRoomBooking = tryCatch(async (req, res, next) => {
   }
   const hostel = await Hostel.findById(HostelName);
 
-  const seaterRoom = hostel.SeaterRooms.find((room) => room.seaterType === parseInt(SeaterType));
-  const seaterCount = hostel.SeaterRooms.find((roomCount) => roomCount.count === parseInt(Count));
+  const seaterRoom = hostel.SeaterRooms.find((room) => room.seaterType === parseInt(SeaterType) && room.count === parseInt(Count));
 
-  if (!seaterCount) {
+  if (!seaterRoom) {
     return next(new errorHandler("Seater room not found", 404));
   }
 
-  const room = seaterCount.rooms.find((room) => room.roomNumber === RoomNumber);
+  const room = seaterRoom.rooms.find((room) => room.roomNumber === RoomNumber);
 
   if (!room) {
     return next(new errorHandler("Room not found", 404));
