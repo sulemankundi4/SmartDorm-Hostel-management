@@ -30,48 +30,18 @@ app.use(morgan("dev"));
 const corsOptions = {
   origin: "https://smart-dorm-hostel-management-c3av.vercel.app",
   credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
 
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-    maxPoolSize: 10,
-    retryWrites: true,
-    w: "majority",
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Connected to MongoDB successfully");
+    console.log("Connected to MongoDB");
   })
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1); // Exit the process if MongoDB connection fails
+    console.log("Error: ", err);
   });
-
-// Add connection event listeners
-mongoose.connection.on("connected", () => {
-  console.log("Mongoose connected to DB");
-});
-
-mongoose.connection.on("error", (err) => {
-  console.error("Mongoose connection error:", err);
-});
-
-mongoose.connection.on("disconnected", () => {
-  console.log("Mongoose disconnected from DB");
-});
-
-// Handle process termination
-process.on("SIGINT", async () => {
-  await mongoose.connection.close();
-  process.exit(0);
-});
-
 const port = process.env.PORT || 5000;
 console.log(process.env.MONGO_URI);
 app.use("/api/v1/users", userRouter);
