@@ -30,6 +30,7 @@ app.use(morgan("dev"));
 const corsOptions = {
   origin: "https://smart-dorm-hostel-management-c3av.vercel.app",
   credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
