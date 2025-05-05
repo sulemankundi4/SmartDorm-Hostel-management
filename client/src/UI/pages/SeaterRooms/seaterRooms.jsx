@@ -5,7 +5,7 @@ import { FaBed } from 'react-icons/fa';
 import Navbar from '../../components/navBar';
 import Footer from '../../components/footer';
 import { useSelector } from 'react-redux';
-import { useMatchUserPreferencesQuery } from '../../../Redux/api/userPreferencesApi';
+import { useMatchUserPreferencesQuery } from '../../../Redux/api/userpreferencesApi';
 import TopBar from './../../components/topBar';
 
 const SeaterRooms = () => {
