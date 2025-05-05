@@ -5,7 +5,7 @@ import {
   useCreateUserPreferencesMutation,
   useGetUserPreferencesQuery,
   useUpdateUserPreferencesMutation,
-} from '../../../Redux/api/userPreferencesApi';
+} from '../../../Redux/api/userpreferencesApi';
 import toast from 'react-hot-toast';
 import TopBar from './../../components/topBar';
 import Navbar from './../../components/navBar';
