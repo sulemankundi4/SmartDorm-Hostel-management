@@ -36,13 +36,42 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+    retryWrites: true,
+    w: "majority",
+  })
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB successfully");
   })
   .catch((err) => {
-    console.log("Error: ", err);
+    console.error("MongoDB connection error:", err);
+    process.exit(1); // Exit the process if MongoDB connection fails
   });
+
+// Add connection event listeners
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose connected to DB");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.error("Mongoose connection error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.log("Mongoose disconnected from DB");
+});
+
+// Handle process termination
+process.on("SIGINT", async () => {
+  await mongoose.connection.close();
+  process.exit(0);
+});
+
 const port = process.env.PORT || 5000;
 console.log(process.env.MONGO_URI);
 app.use("/api/v1/users", userRouter);
