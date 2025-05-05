@@ -54,8 +54,13 @@ app.use("/api/v1/reviews", hostelReviews);
 app.use("/api/v1/payment-method", paymentMethodRoutes);
 app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/preferences", userPreferencesRoutes);
+
 app.listen(port, () => {
   console.log(`Server is running at port ${port}`);
+});
+
+app.get("/", (req, res) => {
+  res.send("backedn is running");
 });
 
 app.use(errorMiddleware);
