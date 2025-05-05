@@ -27,21 +27,12 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-// CORS middleware
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", true);
+const corsOptions = {
+  origin: "https://smart-dorm-hostel-management-c3av.vercel.app",
+  credentials: true,
+};
 
-  // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Max-Age", "86400"); // 24 hours
-    return res.status(204).end();
-  }
-
-  next();
-});
+app.use(cors(corsOptions));
 
 mongoose
   .connect(process.env.MONGO_URI)
