@@ -1,17 +1,6 @@
 const mongoose = require("mongoose");
 const Users = require("../models/user");
 
-const connectDB = () => {
-  mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-      console.log("Connected to MongoDB");
-    })
-    .catch((err) => {
-      console.log("Error: ", err);
-    });
-};
-
 class errorHandler extends Error {
   constructor(message, statusCode) {
     super(message);
@@ -47,7 +36,6 @@ const adminOnly = tryCatch(async (req, res, next) => {
 
 module.exports = {
   errorHandler,
-  connectDB,
   tryCatch,
   adminOnly,
 };

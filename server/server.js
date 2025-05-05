@@ -1,8 +1,12 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const { connectDB } = require("./utils/features");
 const { config } = require("dotenv");
+
+// Load environment variables first
+config({
+  path: "../.env", // Fixed the path to point to .env in root directory
+});
 
 const { errorMiddleware } = require("./middleware/error");
 
@@ -16,6 +20,7 @@ const hostelReviews = require("./routes/reviews");
 const paymentMethodRoutes = require("./routes/paymentMethods");
 const transactionRoutes = require("./routes/transactions");
 const userPreferencesRoutes = require("./routes/preference");
+const { default: mongoose } = require("mongoose");
 
 const app = express();
 
@@ -23,19 +28,22 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 const corsOptions = {
-  origin: "http://localhost:5173", // replace with your client's origin
+  origin: "http://localhost:5174", // replace with your client's origin
   credentials: true, // this allows the cookie to be sent with the request
 };
 
 app.use(cors(corsOptions));
 
-config({
-  path: "./.env",
-});
-
-connectDB();
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log("Error: ", err);
+  });
 const port = process.env.PORT || 5000;
-
+console.log(process.env.MONGO_URI);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/listings", listingRouter);
 app.use("/api/v1/tickets", userTicketsRouter);
