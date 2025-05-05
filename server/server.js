@@ -27,17 +27,21 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Allow all origins with all necessary headers
-app.use(
-  cors({
-    origin: "*", // Allow all origins
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
-    credentials: true,
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  })
-);
+// CORS middleware
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", true);
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Max-Age", "86400"); // 24 hours
+    return res.status(204).end();
+  }
+
+  next();
+});
 
 mongoose
   .connect(process.env.MONGO_URI)
