@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 const corsOptions = {
-  origin: "http://localhost:5174", // replace with your client's origin
+  origin: "https://smart-dorm-hostel-management-c3av.vercel.app", // replace with your client's origin
   credentials: true, // this allows the cookie to be sent with the request
 };
 
