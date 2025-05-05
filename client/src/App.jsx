@@ -21,7 +21,7 @@ import MyListings from './Admin/pages/Listings/MyListings';
 import AddNewListing from './Admin/pages/Listings/AddNewListing';
 import AllListings from './Admin/pages/Listings/AllListings';
 import VerifyListingDetails from './Admin/pages/Listings/verificationListingDetails';
-import ListingDetails from './Admin/pages/Listings/ListingDetails';
+import ListingDetails from './Admin/pages/Listings/listingDetails';
 import HostelDetails from './UI/pages/hostelDetails';
 import SearchListings from './UI/pages/Listings/searchListings';
 import ListingTable from './Admin/pages/Listings/ManageListings/viewListingTable';
